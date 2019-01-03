@@ -1,0 +1,12 @@
+<h2>Create a New Coupon!</h2>
+<%= form_for @coupon do |f| %>
+  <%= f.label :coupon_type %>
+  <%= f.text_field :coupon_type %>
+  <%= f.label :amount %>
+  <%= f.number_field :amount %>
+  <%= f.label :cart_minimum %>
+  <%= f.number_field :cart_minimum %>
+  <%= f.label :code %>
+  <%= f.text_field :code %>
+  <%= f.submit %>
+<% end %>
