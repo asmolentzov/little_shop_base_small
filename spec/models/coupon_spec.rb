@@ -21,7 +21,7 @@ describe Coupon, type: :model do
         coupon_5 = Coupon.create(coupon_type: 'percentage', amount: 10, code: 'COUPON5', user: merchant_2)
         
         coupons_1 = [coupon_1, coupon_2, coupon_3]
-        expect(merchant_coupons(merchant_1)).to eq(coupons_1)
+        expect(Coupon.merchant_coupons(merchant_1)).to eq(coupons_1)
       end
     end
   end
