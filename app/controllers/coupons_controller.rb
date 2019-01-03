@@ -9,7 +9,9 @@ class CouponsController < ApplicationController
   
   def create
     coupon = Coupon.new(coupon_params)
+    coupon.user = current_user
     coupon.save
+    flash[:success] = "Coupon #{coupon.code} was successfully created!"
     redirect_to coupons_path
   end
   

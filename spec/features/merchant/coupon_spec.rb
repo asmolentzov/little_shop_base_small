@@ -35,7 +35,6 @@ describe 'As a merchant on the site' do
       within "#coupon-#{coupon.id}" do
         expect(page).to have_content(code)
         expect(page).to have_content("#{amount}% discount")
-        expect(page).to have_content("$0.00 cart minimum amount")
         expect(page).to have_content("This coupon has not been used")
       end
     end

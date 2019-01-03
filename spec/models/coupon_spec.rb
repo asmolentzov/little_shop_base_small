@@ -12,13 +12,13 @@ describe Coupon, type: :model do
     describe '#merchant_coupons' do
       it 'returns all coupons belonging to a merchant' do
         merchant_1 = create(:merchant)
-        coupon_1 = Coupon.create(coupon_type: 'percentage', amount: 10, code: 'COUPON1', user: merchant_1)
-        coupon_2 = Coupon.create(coupon_type: 'percentage', amount: 10, code: 'COUPON2', user: merchant_1)
-        coupon_3 = Coupon.create(coupon_type: 'percentage', amount: 10, code: 'COUPON3', user: merchant_1)
+        coupon_1 = Coupon.create(coupon_type: 0, amount: 10, code: 'COUPON1', user: merchant_1)
+        coupon_2 = Coupon.create(coupon_type: 0, amount: 10, code: 'COUPON2', user: merchant_1)
+        coupon_3 = Coupon.create(coupon_type: 0, amount: 10, code: 'COUPON3', user: merchant_1)
         
         merchant_2 = create(:merchant)
-        coupon_4 = Coupon.create(coupon_type: 'percentage', amount: 10, code: 'COUPON4', user: merchant_2)
-        coupon_5 = Coupon.create(coupon_type: 'percentage', amount: 10, code: 'COUPON5', user: merchant_2)
+        coupon_4 = Coupon.create(coupon_type: 0, amount: 10, code: 'COUPON4', user: merchant_2)
+        coupon_5 = Coupon.create(coupon_type: 0, amount: 10, code: 'COUPON5', user: merchant_2)
         
         coupons_1 = [coupon_1, coupon_2, coupon_3]
         expect(Coupon.merchant_coupons(merchant_1)).to eq(coupons_1)
