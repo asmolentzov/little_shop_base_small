@@ -84,15 +84,39 @@ RSpec.describe Cart do
   end
 
   it '.grand_total' do
-    item_1, item_2 = create_list(:item, 2)
+    merchant = create(:merchant)
+    item_1 = create(:item, user: merchant)
+    item_2 = create(:item, user: merchant)
     cart = Cart.new({})
+    cart.add_item(item_1.id, price: 20)
     cart.add_item(item_1.id)
-    cart.add_item(item_1.id)
     cart.add_item(item_2.id)
     cart.add_item(item_2.id)
     cart.add_item(item_2.id)
+    
+    total = cart.subtotal(item_1.id) + cart.subtotal(item_2.id)
 
-    expect(cart.grand_total).to eq(cart.subtotal(item_1.id) + cart.subtotal(item_2.id))
+    expect(cart.grand_total).to eq(total)
+    
+    coupon = create(:percent_coupon, user: merchant)
+    
+    expect(cart.grand_total(coupon)).to eq(total - ((coupon.amount / 100.0) * total))
+    
+    coupon_2 = create(:dollar_coupon, user: merchant)
+    
+    expect(cart.grand_total(coupon_2)).to eq(total - coupon.amount)
+    
+    coupon_3 = create(:dollar_coupon, amount: 10, cart_minimum: 20, user: merchant)
+    
+    expect(cart.grand_total(coupon_3)).to eq(total - coupon.amount)
+    
+    coupon_4 = create(:dollar_coupon, amount: 10, cart_minimum: 500, user: merchant)
+    
+    expect(cart.grand_total(coupon_4).to eq(total))
+    
+    coupon_5 = create(:percent_coupon)
+    
+    expect(cart.grand_total(coupon)).to eq(total)
   end
   
   it '.pre_discount_total' do
@@ -102,26 +126,7 @@ RSpec.describe Cart do
     cart.add_item(item_1.id)
     cart.add_item(item_1.id)
     cart.add_item(item_2.id)
-   
-    coupon = create(:percent_coupon)
-    cart.add_coupon(coupon)
       
     expect(cart.pre_discount_total).to eq(item_1.price + item_1.price + item_2.price)
-  end
-  
-  it '.add_coupon' do
-    item_1 = create(:item)
-    cart = Cart.new({})
-    cart.add_item(item_1.id)
-  
-    coupon = create(:percent_coupon)
-    cart.add_coupon(coupon)
-  
-    expect(cart.coupon).to eq(coupon)
-  
-    coupon_2 = create(:dollar_coupon)
-    cart.add_coupon(coupon_2)
-  
-    expect(cart.coupon).to eq(coupon)
   end
 end

@@ -1,10 +1,8 @@
 class Cart
-  attr_reader :contents, 
-              :coupon
+  attr_reader :contents
 
   def initialize(initial_contents)
     @contents = initial_contents || Hash.new(0)
-    @coupon = nil
   end
 
   def total_count
@@ -56,9 +54,5 @@ class Cart
     @contents.keys.sum do |item_id|
       Item.find(item_id).price * count_of(item_id)
     end
-  end
-  
-  def add_coupon(coupon)
-    @coupon ||= coupon
   end
 end
