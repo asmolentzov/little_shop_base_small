@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   resources :items, only: [:index, :show]
   resources :merchants, only: [:index]
   
-  resources :coupons, only: [:index, :new, :create, :destroy]
+  resources :coupons, only: [:index, :new, :create, :destroy, :edit, :update]
 
   get '/cart', to: 'cart#index'
   post '/cart/additem/:id', to: 'cart#add_item', as: 'cart_add_item'

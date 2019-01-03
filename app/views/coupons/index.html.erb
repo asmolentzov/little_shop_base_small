@@ -15,6 +15,7 @@
       <% else %>
         <p>This coupon has not been used.</p>
         <%= link_to 'Delete', coupon_path(coupon), method: :delete %>
+        <%= link_to 'Edit', edit_coupon_path(coupon) %>
       <% end %>
     </div>
   <% end %>

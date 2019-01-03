@@ -14,6 +14,7 @@ class CouponsController < ApplicationController
       flash[:success] = "Coupon #{@coupon.code} was successfully created!"
       redirect_to coupons_path
     else
+      @errors = @coupon.errors
       render :new
     end
   end
@@ -23,6 +24,22 @@ class CouponsController < ApplicationController
     coupon.destroy
     flash[:success] = "Coupon #{coupon.code} was successfully deleted"
     redirect_to coupons_path
+  end
+  
+  def edit
+    @coupon = Coupon.find(params[:id])
+  end
+  
+  def update
+    coupon = Coupon.find(params[:id])
+    if coupon.update(coupon_params)
+      flash[:success] = "Coupon #{coupon.code} was successfully updated!"
+      redirect_to coupons_path
+    else
+      @coupon = Coupon.find(params[:id])
+      @errors = coupon.errors
+      render :edit
+    end
   end
   
   private
