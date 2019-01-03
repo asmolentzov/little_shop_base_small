@@ -129,8 +129,8 @@ describe 'As a merchant on the site' do
       
       expect(current_path).to eq(edit_coupon_path(coupon_2))
       expect(find_field('coupon[coupon_type]').value).to eq('dollars')
-      expect(find_field('coupon[amount]').value).to eq(coupon_2.amount)
-      expect(find_field('coupon[cart_minimum]').value).to eq(coupon_2.cart_minimum)
+      expect(find_field('coupon[amount]').value).to eq(coupon_2.amount.to_s)
+      expect(find_field('coupon[cart_minimum]').value).to eq(coupon_2.cart_minimum.to_s)
       expect(find_field('coupon[code]').value).to eq(coupon_2.code)
     end
   end

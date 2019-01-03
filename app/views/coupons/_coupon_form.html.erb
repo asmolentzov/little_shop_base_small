@@ -1,0 +1,18 @@
+<%= form_for @coupon do |f| %>
+  <% if @coupon.errors.any? %>
+    <ul>
+      <% @coupon.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+  <%= f.label :coupon_type %>
+  <%= f.text_field :coupon_type %>
+  <%= f.label :amount %>
+  <%= f.number_field :amount %>
+  <%= f.label :cart_minimum %>
+  <%= f.number_field :cart_minimum %>
+  <%= f.label :code %>
+  <%= f.text_field :code %>
+  <%= f.submit %>
+<% end %>
