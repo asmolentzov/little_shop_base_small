@@ -1,8 +1,10 @@
 class Cart
-  attr_reader :contents
+  attr_reader :contents,
+              :coupons
 
   def initialize(initial_contents)
     @contents = initial_contents || Hash.new(0)
+    @coupons = []
   end
 
   def total_count
@@ -42,5 +44,9 @@ class Cart
     @contents.keys.map do |item_id|
       subtotal(item_id)
     end.sum
+  end
+  
+  def add_coupon(coupon)
+    @coupons << coupon
   end
 end
