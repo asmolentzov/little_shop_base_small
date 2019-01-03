@@ -19,7 +19,9 @@ class CouponsController < ApplicationController
   end
   
   def destroy
-    Coupon.destroy(params[:id])
+    coupon = Coupon.find(params[:id])
+    coupon.destroy
+    flash[:success] = "Coupon #{coupon.code} was successfully deleted"
     redirect_to coupons_path
   end
   

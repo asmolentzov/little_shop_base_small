@@ -5,7 +5,10 @@ describe 'As a merchant on the site' do
 
   before(:each) do
     @merchant = create(:merchant)
-    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
+    visit login_path
+    fill_in :email, with: @merchant.email
+    fill_in :password, with: @merchant.password
+    click_button 'Log in'
   end
   describe 'on my dashboard' do
     it 'I see a link to create a new coupon' do
@@ -103,8 +106,11 @@ describe 'As a merchant on the site' do
       end
       
       expect(current_path).to eq(coupons_path)
-      expect(page).to_not have_content(coupon_2.code)
-      expect(page).to have_content(coupon_1.code)
+      within "#coupons" do  
+        expect(page).to_not have_content(coupon_2.code)
+        expect(page).to have_content(coupon_1.code)
+      end
+      expect(page).to have_content("Coupon #{coupon_2.code} was successfully deleted")
     end
   end
 end
