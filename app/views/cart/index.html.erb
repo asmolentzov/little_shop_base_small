@@ -4,8 +4,8 @@
   <% if @applied_coupon %>
     <p>Subtotal: <%= number_to_currency@cart.pre_discount_total %></p>
     <p>Coupon <%= @applied_coupon['code'] %> discount: <%= @applied_coupon['amount'] %>%</p>
-    <p>Grand Total: <%= number_to_currency(@cart.grand_total(@applied_coupon)) %></p>
   <% end %>
+  <p>Grand Total: <%= number_to_currency(@cart.grand_total(@applied_coupon)) %></p>
   
   Add Coupon:
   <%= form_for @coupon, url: apply_coupon_path do |f| %>

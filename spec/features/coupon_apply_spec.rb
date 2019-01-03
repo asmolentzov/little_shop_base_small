@@ -32,10 +32,6 @@ describe 'Coupon apply workflow' do
       expect(page).to have_content("Coupon #{@coupon.code} was successfully applied!")
       new_total = @item.price - ((@coupon.amount / 100.0) * @item.price)
       
-      # within "#item-#{@item.id}" do
-      #   expect(page).to have_content("#{@coupon.code} discount: #{@coupon.amount}%")
-      #   expect(page).to have_content("New Subtotal: #{number_to_currency(new_total)}")
-      # end
       expect(page).to have_content("Subtotal: #{number_to_currency(@item.price)}")
       expect(page).to have_content("Coupon #{@coupon.code} discount: #{@coupon.amount}%")
       expect(page).to have_content("Grand Total: #{number_to_currency(new_total)}")
