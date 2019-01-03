@@ -1,9 +1,10 @@
 class Cart
-  attr_reader :contents
+  attr_reader :contents, 
+              :coupon
 
   def initialize(initial_contents)
     @contents = initial_contents || Hash.new(0)
-    # @coupons = []
+    @coupon = nil
   end
 
   def total_count
@@ -37,7 +38,6 @@ class Cart
   def subtotal(item_id)
     item = Item.find(item_id)
     subtotal = item.price * count_of(item_id)
-    # coupon = session[:coupon]
     # if coupon 
     #   if coupon.user == item.user
     #     #adjust subtotal based on coupon
@@ -52,7 +52,13 @@ class Cart
     end.sum
   end
   
-  # def add_coupon(coupon)
-  #   @coupons << coupon
-  # end
+  def pre_discount_total
+    @contents.keys.sum do |item_id|
+      Item.find(item_id).price * count_of(item_id)
+    end
+  end
+  
+  def add_coupon(coupon)
+    @coupon ||= coupon
+  end
 end
