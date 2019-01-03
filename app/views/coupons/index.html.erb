@@ -13,6 +13,7 @@
       <p>USED</p>
     <% else %>
       <p>This coupon has not been used.</p>
+      <%= link_to 'Delete', coupon_path(coupon), method: :delete %>
     <% end %>
   </div>
 <% end %>
