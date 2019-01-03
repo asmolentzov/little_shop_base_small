@@ -95,39 +95,53 @@ RSpec.describe Cart do
     expect(cart.grand_total).to eq(cart.subtotal(item_1.id) + cart.subtotal(item_2.id))
   end
   
-  it '.add_coupon' do
+  it '.pre_discount_total' do
     item_1 = create(:item)
+    item_2 = create(:item)
     cart = Cart.new({})
     cart.add_item(item_1.id)
-  
+    cart.add_item(item_1.id)
+    cart.add_item(item_2.id)
+   
     coupon = create(:percent_coupon)
     cart.add_coupon(coupon)
     
-    expect(cart.coupons).to eq([coupon])
-    
-    coupon_2 = create(:dollar_coupon)
-    coupon_3 = create(:dollar_coupon)
-    cart.add_coupon(coupon_2)
-    cart.add_coupon(coupon_3)
-    
-    expect(cart.coupons).to eq([coupon, coupon_2, coupon_3])
+    expect(cart.pre_discount_total).to eq(item_1.price + item_1.price + item_2.price)
   end
   
-  it '.coupons' do
-      item_1 = create(:item)
-      cart = Cart.new({})
-      cart.add_item(item_1.id)
-    
-      coupon = create(:percent_coupon)
-      cart.add_coupon(coupon)
-      
-      expect(cart.coupons).to eq([coupon])
-      
-      coupon_2 = create(:dollar_coupon)
-      coupon_3 = create(:dollar_coupon)
-      cart.add_coupon(coupon_2)
-      cart.add_coupon(coupon_3)
-      
-      expect(cart.coupons).to eq([coupon, coupon_2, coupon_3])
-  end
+  # it '.add_coupon' do
+  #   item_1 = create(:item)
+  #   cart = Cart.new({})
+  #   cart.add_item(item_1.id)
+  # 
+  #   coupon = create(:percent_coupon)
+  #   cart.add_coupon(coupon)
+  # 
+  #   expect(cart.coupons).to eq([coupon])
+  # 
+  #   coupon_2 = create(:dollar_coupon)
+  #   coupon_3 = create(:dollar_coupon)
+  #   cart.add_coupon(coupon_2)
+  #   cart.add_coupon(coupon_3)
+  # 
+  #   expect(cart.coupons).to eq([coupon, coupon_2, coupon_3])
+  # end
+  # 
+  # it '.coupons' do
+  #     item_1 = create(:item)
+  #     cart = Cart.new({})
+  #     cart.add_item(item_1.id)
+  # 
+  #     coupon = create(:percent_coupon)
+  #     cart.add_coupon(coupon)
+  # 
+  #     expect(cart.coupons).to eq([coupon])
+  # 
+  #     coupon_2 = create(:dollar_coupon)
+  #     coupon_3 = create(:dollar_coupon)
+  #     cart.add_coupon(coupon_2)
+  #     cart.add_coupon(coupon_3)
+  # 
+  #     expect(cart.coupons).to eq([coupon, coupon_2, coupon_3])
+  # end
 end

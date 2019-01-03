@@ -166,10 +166,6 @@ describe 'As a merchant on the site' do
       expect(page).to have_content("Coupon type can't be blank")
       expect(page).to have_content("Amount is not a number")
       expect(page).to have_content("Code can't be blank")
-      expect(find_field('coupon[coupon_type]').value).to eq('dollars')
-      expect(find_field('coupon[amount]').value).to eq(coupon.amount.to_s)
-      expect(find_field('coupon[cart_minimum]').value).to eq(coupon.cart_minimum.to_s)
-      expect(find_field('coupon[code]').value).to eq(coupon.code)
       
       fill_in :coupon_code, with: coupon_2.code
       fill_in :coupon_amount, with: -1

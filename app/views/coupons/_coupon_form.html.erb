@@ -1,7 +1,7 @@
 <%= form_for @coupon do |f| %>
-  <% if @errors %>
+  <% if @coupon.errors %>
     <ul>
-      <% @errors.full_messages.each do |message| %>
+      <% @coupon.errors.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>
     </ul>
