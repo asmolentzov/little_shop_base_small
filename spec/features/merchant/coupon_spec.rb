@@ -87,6 +87,25 @@ describe 'As a merchant on the site' do
       end  
       expect(page).to_not have_content(coupon_3.code)
     end
+    
+    it 'allows me to delete an unused coupon' do
+      coupon_1 = create(:percent_coupon, user: @merchant, used: true)
+      coupon_2 = create(:dollar_coupon, user: @merchant)
+      
+      visit coupons_path
+      
+      within "#coupon-#{coupon_1.id}" do
+        expect(page).to_not have_link('Delete')
+      end
+      within "#coupon-#{coupon_2.id}" do
+        expect(page).to have_link('Delete')
+        click_link('Delete')
+      end
+      
+      expect(current_path).to eq(coupons_path)
+      expect(page).to_not have_content(coupon_2.code)
+      expect(page).to have_content(coupon_1.code)
+    end
   end
 end
 
