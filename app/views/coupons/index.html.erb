@@ -1,18 +1,21 @@
 <h1>CouponsCouponsCoupons!</h1>
 
-<% @coupons.each do |coupon| %>
-  <div id="coupon-<%= coupon.id %>">
-    <h3><%= coupon.code %></h3>
-    <% if coupon.coupon_type == 'percentage' %>
-      <p><%= coupon.amount %>% discount</p>
-    <% else %>
-      <p><%= number_to_currency(coupon.amount) %> discount</p>
-      <p><%= number_to_currency(coupon.cart_minimum) %> cart minimum amount</p>
-    <% end %>
-    <% if coupon.used %>
-      <p>USED</p>
-    <% else %>
-      <p>This coupon has not been used.</p>
-    <% end %>
-  </div>
-<% end %>
+<div id="coupons">
+  <% @coupons.each do |coupon| %>
+    <div id="coupon-<%= coupon.id %>">
+      <h3><%= coupon.code %></h3>
+      <% if coupon.coupon_type == 'percentage' %>
+        <p><%= coupon.amount %>% discount</p>
+      <% else %>
+        <p><%= number_to_currency(coupon.amount) %> discount</p>
+        <p><%= number_to_currency(coupon.cart_minimum) %> cart minimum amount</p>
+      <% end %>
+      <% if coupon.used %>
+        <p>USED</p>
+      <% else %>
+        <p>This coupon has not been used.</p>
+        <%= link_to 'Delete', coupon_path(coupon), method: :delete %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

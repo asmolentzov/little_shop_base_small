@@ -5,7 +5,10 @@ describe 'As a merchant on the site' do
 
   before(:each) do
     @merchant = create(:merchant)
-    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
+    visit login_path
+    fill_in :email, with: @merchant.email
+    fill_in :password, with: @merchant.password
+    click_button 'Log in'
   end
   describe 'on my dashboard' do
     it 'I see a link to create a new coupon' do
@@ -86,6 +89,28 @@ describe 'As a merchant on the site' do
         expect(page).to have_content("USED")
       end  
       expect(page).to_not have_content(coupon_3.code)
+    end
+    
+    it 'allows me to delete an unused coupon' do
+      coupon_1 = create(:percent_coupon, user: @merchant, used: true)
+      coupon_2 = create(:dollar_coupon, user: @merchant)
+      
+      visit coupons_path
+      
+      within "#coupon-#{coupon_1.id}" do
+        expect(page).to_not have_link('Delete')
+      end
+      within "#coupon-#{coupon_2.id}" do
+        expect(page).to have_link('Delete')
+        click_link('Delete')
+      end
+      
+      expect(current_path).to eq(coupons_path)
+      within "#coupons" do  
+        expect(page).to_not have_content(coupon_2.code)
+        expect(page).to have_content(coupon_1.code)
+      end
+      expect(page).to have_content("Coupon #{coupon_2.code} was successfully deleted")
     end
   end
 end
