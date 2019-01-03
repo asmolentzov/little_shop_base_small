@@ -51,6 +51,7 @@ describe 'As a merchant on the site' do
       
       coupon = create(:percent_coupon, user: @merchant)
       
+      fill_in :coupon_coupon_type, with: 'percentage'
       fill_in :coupon_amount, with: -1
       fill_in :coupon_code, with: coupon.code
       click_button 'Create Coupon'
@@ -58,6 +59,8 @@ describe 'As a merchant on the site' do
       expect(page).to have_content("Create a New Coupon!")
       expect(page).to have_content("Amount must be greater than or equal to 0")
       expect(page).to have_content("Code has already been taken")
+      expect(find_field("coupon[coupon_type]").value).to eq('percentage')
+      expect(find_field("coupon[code]").value).to eq(coupon.code)
     end
   end
 end
