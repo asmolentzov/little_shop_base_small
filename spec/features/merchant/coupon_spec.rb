@@ -57,7 +57,7 @@ describe 'As a merchant on the site' do
       
       expect(page).to have_content("Create a New Coupon!")
       expect(page).to have_content("Amount must be greater than or equal to 0")
-      expect(page).to have_content("Code must be unique")
+      expect(page).to have_content("Code has already been taken")
     end
   end
 end
