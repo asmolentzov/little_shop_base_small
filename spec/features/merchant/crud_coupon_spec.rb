@@ -164,7 +164,7 @@ describe 'As a merchant on the site' do
       
       expect(page).to have_content 'Edit Coupon' 
       expect(page).to have_content("Coupon type can't be blank")
-      expect(page).to have_content("Amount can't be blank")
+      expect(page).to have_content("Amount is not a number")
       expect(page).to have_content("Code can't be blank")
       expect(find_field('coupon[coupon_type]').value).to eq('dollars')
       expect(find_field('coupon[amount]').value).to eq(coupon.amount.to_s)
@@ -173,6 +173,7 @@ describe 'As a merchant on the site' do
       
       fill_in :coupon_code, with: coupon_2.code
       fill_in :coupon_amount, with: -1
+      click_button('Update Coupon')
       
       expect(page).to have_content("Edit Coupon")
       expect(page).to have_content("Amount must be greater than or equal to 0")
