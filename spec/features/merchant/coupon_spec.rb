@@ -1,6 +1,8 @@
 require 'rails_helper' 
 
 describe 'As a merchant on the site' do
+  include ActionView::Helpers::NumberHelper
+
   before(:each) do
     @merchant = create(:merchant)
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
@@ -67,23 +69,22 @@ describe 'As a merchant on the site' do
   describe 'on my coupons index page' do
     it 'shows me a list of my coupons' do
       coupon_1 = create(:percent_coupon, user: @merchant)
-      coupon_2 = create(:dollars_coupon, user: @merchant, used: true)
+      coupon_2 = create(:dollar_coupon, user: @merchant, used: true)
       coupon_3 = create(:percent_coupon)
       
-      visit coupons_index_path
+      visit coupons_path
       
       within "#coupon-#{coupon_1.id}" do
-        expect(page).to have_content(code)
-        expect(page).to have_content("#{amount}% discount")
+        expect(page).to have_content(coupon_1.code)
+        expect(page).to have_content("#{coupon_1.amount}% discount")
         expect(page).to have_content("This coupon has not been used")
       end  
       
       within "#coupon-#{coupon_2.id}" do
-        expect(page).to have_content(code)
+        expect(page).to have_content(coupon_2.code)
         expect(page).to have_content("#{number_to_currency(coupon_2.amount)} discount")
         expect(page).to have_content("USED")
       end  
-      
       expect(page).to_not have_content(coupon_3.code)
     end
   end
