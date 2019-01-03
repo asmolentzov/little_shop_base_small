@@ -36,7 +36,31 @@ describe 'As a merchant on the site' do
         expect(page).to have_content(code)
         expect(page).to have_content("#{amount}% discount")
         expect(page).to have_content("This coupon has not been used")
-      end
+      end      
+    end
+
+    it 'will not allow me to create a coupon with missing or bad info' do
+      visit new_coupon_path
+      
+      click_button 'Create Coupon'
+      
+      expect(page).to have_content("Create a New Coupon!")
+      expect(page).to have_content("Coupon type can't be blank")
+      expect(page).to have_content("Amount can't be blank")
+      expect(page).to have_content("Code can't be blank")
+      
+      coupon = create(:percent_coupon, user: @merchant)
+      
+      fill_in :coupon_coupon_type, with: 'percentage'
+      fill_in :coupon_amount, with: -1
+      fill_in :coupon_code, with: coupon.code
+      click_button 'Create Coupon'
+      
+      expect(page).to have_content("Create a New Coupon!")
+      expect(page).to have_content("Amount must be greater than or equal to 0")
+      expect(page).to have_content("Code has already been taken")
+      expect(find_field("coupon[coupon_type]").value).to eq('percentage')
+      expect(find_field("coupon[code]").value).to eq(coupon.code)
     end
   end
 end
