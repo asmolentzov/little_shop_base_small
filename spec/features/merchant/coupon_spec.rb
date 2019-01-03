@@ -48,6 +48,16 @@ describe 'As a merchant on the site' do
       expect(page).to have_content("Coupon type can't be blank")
       expect(page).to have_content("Amount can't be blank")
       expect(page).to have_content("Code can't be blank")
+      
+      coupon = create(:percent_coupon, user: @merchant)
+      
+      fill_in :coupon_amount, with: -1
+      fill_in :coupon_code, with: coupon.code
+      click_button 'Create Coupon'
+      
+      expect(page).to have_content("Create a New Coupon!")
+      expect(page).to have_content("Amount must be greater than or equal to 0")
+      expect(page).to have_content("Code must be unique")
     end
   end
 end
