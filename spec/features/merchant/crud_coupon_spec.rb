@@ -112,6 +112,27 @@ describe 'As a merchant on the site' do
       end
       expect(page).to have_content("Coupon #{coupon_2.code} was successfully deleted")
     end
+    
+    it 'allows me to edit an unused coupon' do
+      coupon_1 = create(:percent_coupon, user: @merchant, used: true)
+      coupon_2 = create(:dollar_coupon, user: @merchant)
+      
+      visit coupons_path
+      
+      within "#coupon-#{coupon_1.id}" do
+        expect(page).to_not have_link('Edit')
+      end
+      within "#coupon-#{coupon_2.id}" do
+        expect(page).to have_link('Edit')
+        click_link('Edit')
+      end
+      
+      expect(current_path).to eq(edit_coupon_path(coupon_2))
+      expect(find_field('coupon[coupon_type]').value).to eq('dollars')
+      expect(find_field('coupon[amount]').value).to eq(coupon_2.amount)
+      expect(find_field('coupon[cart_minimum]').value).to eq(coupon_2.cart_minimum)
+      expect(find_field('coupon[code]').value).to eq(coupon_2.code)
+    end
   end
 end
 
