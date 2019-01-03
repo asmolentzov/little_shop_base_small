@@ -9,7 +9,7 @@ FactoryBot.define do
   factory :dollar_coupon, class: Coupon do
     coupon_type { 'dollars' }
     sequence(:amount) { |n| n * 10 }
-    sequence(:code) { |n| "COUPON#{n}"}
+    sequence(:code) { |n| "COUPONDOLLARS#{n}"}
     association :user, factory: :merchant
   end
 end
