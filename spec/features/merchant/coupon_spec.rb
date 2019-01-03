@@ -63,5 +63,29 @@ describe 'As a merchant on the site' do
       expect(find_field("coupon[code]").value).to eq(coupon.code)
     end
   end
+  
+  describe 'on my coupons index page' do
+    it 'shows me a list of my coupons' do
+      coupon_1 = create(:percent_coupon, user: @merchant)
+      coupon_2 = create(:dollars_coupon, user: @merchant, used: true)
+      coupon_3 = create(:percent_coupon)
+      
+      visit coupons_index_path
+      
+      within "#coupon-#{coupon_1.id}" do
+        expect(page).to have_content(code)
+        expect(page).to have_content("#{amount}% discount")
+        expect(page).to have_content("This coupon has not been used")
+      end  
+      
+      within "#coupon-#{coupon_2.id}" do
+        expect(page).to have_content(code)
+        expect(page).to have_content("#{number_to_currency(coupon_2.amount)} discount")
+        expect(page).to have_content("USED")
+      end  
+      
+      expect(page).to_not have_content(coupon_3.code)
+    end
+  end
 end
 
