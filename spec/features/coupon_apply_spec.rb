@@ -1,6 +1,8 @@
 require 'rails_helper' 
 
 describe 'Coupon apply workflow' do
+  include ActionView::Helpers::NumberHelper
+  
   describe 'I see a field to apply a coupon code on my cart page' do
     before(:each) do
       @merchant = create(:merchant)
@@ -23,18 +25,21 @@ describe 'Coupon apply workflow' do
       visit cart_path
       
       expect(page).to have_content("Add Coupon")
-      fill_in :coupon, with: @coupon.code
+      fill_in :coupon_code, with: @coupon.code
       click_button "Apply Coupon"
       
       expect(current_path).to eq(cart_path)
       expect(page).to have_content("Coupon #{@coupon.code} was successfully applied!")
-      new_total = @item.price - ((@coupon.amount / 100) * @item.price)
+      new_total = @item.price - ((@coupon.amount / 100.0) * @item.price)
       
-      within "#item-#{@item.id}" do
-        expect(page).to have_content("#{@coupon.code} discount: #{coupon.amount}%")
-        expect(page).to have_content("New Subtotal: #{number_to_currency(new_total)}")
-      end
-      expect(page).to have_content("Total: ##{new_total}")
+      # within "#item-#{@item.id}" do
+      #   expect(page).to have_content("#{@coupon.code} discount: #{@coupon.amount}%")
+      #   expect(page).to have_content("New Subtotal: #{number_to_currency(new_total)}")
+      # end
+      
+      expect(page).to have_content("Coupon #{@coupon.code} discount: #{@coupon.amount}%")
+      expect(page).to have_content("Grand Total: #{number_to_currency(new_total)}")
+      
     end
   end
 end

@@ -42,9 +42,20 @@ class CouponsController < ApplicationController
     end
   end
   
+  def apply
+    coupon = Coupon.find_by(code: code_params[:code])
+    @cart.add_coupon(coupon)
+    flash[:success] = "Coupon #{coupon.code} was successfully applied!"
+    redirect_to cart_path
+  end
+  
   private
   
   def coupon_params
     params.require(:coupon).permit(:coupon_type, :amount, :cart_minimum, :code)
+  end
+  
+  def code_params
+    params.require(:coupon).permit(:code)
   end
 end

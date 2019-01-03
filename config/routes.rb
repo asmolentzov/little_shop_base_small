@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :merchants, only: [:index]
   
   resources :coupons, only: [:index, :new, :create, :destroy, :edit, :update]
+  post 'coupons/apply', to: 'coupons#apply', as: 'apply_coupon'
 
   get '/cart', to: 'cart#index'
   post '/cart/additem/:id', to: 'cart#add_item', as: 'cart_add_item'

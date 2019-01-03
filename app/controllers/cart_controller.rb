@@ -5,6 +5,7 @@ class CartController < ApplicationController
 
   def index
     @items = @cart.items
+    @coupon = Coupon.new
   end
 
   def add_item
