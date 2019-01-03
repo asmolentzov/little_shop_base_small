@@ -8,11 +8,14 @@ class CouponsController < ApplicationController
   end
   
   def create
-    coupon = Coupon.new(coupon_params)
-    coupon.user = current_user
-    coupon.save
-    flash[:success] = "Coupon #{coupon.code} was successfully created!"
-    redirect_to coupons_path
+    @coupon = Coupon.new(coupon_params)
+    @coupon.user = current_user
+    if @coupon.save
+      flash[:success] = "Coupon #{@coupon.code} was successfully created!"
+      redirect_to coupons_path
+    else
+      render :new
+    end
   end
   
   private

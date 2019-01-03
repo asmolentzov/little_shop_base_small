@@ -1,5 +1,12 @@
 <h2>Create a New Coupon!</h2>
 <%= form_for @coupon do |f| %>
+  <% if @coupon.errors.any? %>
+    <ul>
+      <% @coupon.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  <% end %>
   <%= f.label :coupon_type %>
   <%= f.text_field :coupon_type %>
   <%= f.label :amount %>
