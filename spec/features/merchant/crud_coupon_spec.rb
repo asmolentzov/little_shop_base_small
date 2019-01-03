@@ -151,6 +151,33 @@ describe 'As a merchant on the site' do
         expect(page).to have_content("#{number_to_currency(new_amount)} discount")
       end
     end
+    it 'does not allow me update a coupon if info is wrong/missing' do
+      coupon = create(:dollar_coupon, amount: 10, user: @merchant)
+      coupon_2 = create(:dollar_coupon)
+      
+      visit edit_coupon_path(coupon)
+      
+      fill_in :coupon_coupon_type, with: ''
+      fill_in :coupon_amount, with: ''
+      fill_in :coupon_code, with: ''
+      click_button('Update Coupon')
+      
+      expect(page).to have_content 'Edit Coupon' 
+      expect(page).to have_content("Coupon type can't be blank")
+      expect(page).to have_content("Amount can't be blank")
+      expect(page).to have_content("Code can't be blank")
+      expect(find_field('coupon[coupon_type]').value).to eq('dollars')
+      expect(find_field('coupon[amount]').value).to eq(coupon.amount.to_s)
+      expect(find_field('coupon[cart_minimum]').value).to eq(coupon.cart_minimum.to_s)
+      expect(find_field('coupon[code]').value).to eq(coupon.code)
+      
+      fill_in :coupon_code, with: coupon_2.code
+      fill_in :coupon_amount, with: -1
+      
+      expect(page).to have_content("Edit Coupon")
+      expect(page).to have_content("Amount must be greater than or equal to 0")
+      expect(page).to have_content("Code has already been taken")
+    end
   end
 end
 
