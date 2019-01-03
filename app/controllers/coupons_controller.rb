@@ -29,6 +29,13 @@ class CouponsController < ApplicationController
     @coupon = Coupon.find(params[:id])
   end
   
+  def update
+    @coupon = Coupon.find(params[:id])
+    @coupon.update(coupon_params)
+    flash[:success] = "Coupon #{@coupon.code} was successfully updated!"
+    redirect_to coupons_path
+  end
+  
   private
   
   def coupon_params

@@ -134,5 +134,23 @@ describe 'As a merchant on the site' do
       expect(find_field('coupon[code]').value).to eq(coupon_2.code)
     end
   end
+  
+  describe 'on the edit coupon page' do
+    it 'allows me to update a coupon' do
+      coupon = create(:dollar_coupon, amount: 10, user: @merchant)
+      new_amount = 20
+      
+      visit edit_coupon_path(coupon)
+      
+      fill_in :coupon_amount, with: new_amount
+      click_button('Update Coupon')
+      
+      expect(current_path).to eq(coupons_path)
+      expect(page).to have_content("Coupon #{coupon.code} was successfully updated!")
+      within "#coupon-#{coupon.id}" do
+        expect(page).to have_content("#{number_to_currency(new_amount)} discount")
+      end
+    end
+  end
 end
 
