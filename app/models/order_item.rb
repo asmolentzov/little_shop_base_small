@@ -1,6 +1,7 @@
 class OrderItem < ApplicationRecord
   belongs_to :order
   belongs_to :item
+  belongs_to :coupon
 
   validates :price, presence: true, numericality: {
     only_integer: false,

@@ -191,7 +191,6 @@ RSpec.describe Order, type: :model do
       order = create(:order)
       create(:fulfilled_order_item, order: order, coupon: coupon)
       expect(order.coupon).to eq(coupon)
-      
       order = create(:order)
       create(:order_item, order: order, coupon: coupon)
       expect(order.coupon).to eq(coupon)
