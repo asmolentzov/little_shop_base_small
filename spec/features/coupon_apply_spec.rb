@@ -199,7 +199,7 @@ describe 'Coupon apply workflow' do
       end
       
       discount_total = @item.price + @item_2.price + @item_3.price - @coupon.amount
-      save_and_open_page
+      
       expect(page).to have_content("Grand Total: #{number_to_currency(discount_total)}")
     end
   end

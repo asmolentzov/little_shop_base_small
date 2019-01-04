@@ -4,11 +4,11 @@
   <div id="coupon">    
     <% if @applied_coupon %>
       <p>Subtotal: <%= number_to_currency@cart.pre_discount_total %></p>
-      <% if @applied_coupon['coupon_type'] == 'percentage' %>
-        <p>Coupon <%= @applied_coupon['code'] %> discount: <%= @applied_coupon['amount'] %>%</p>
+      <% if @applied_coupon.coupon_type == 'percentage' %>
+        <p>Coupon <%= @applied_coupon.code %> discount: <%= @applied_coupon.amount %>%</p>
       <% else %>
-        <p>Coupon <%= @applied_coupon['code'] %> discount: <%= number_to_currency(@applied_coupon['amount'].to_i) %></p>
-        <p><%= number_to_currency(@applied_coupon['cart_minimum'].to_i) %> cart minimum amount</p>
+        <p>Coupon <%= @applied_coupon.code %> discount: <%= number_to_currency(@applied_coupon.amount) %></p>
+        <p><%= number_to_currency(@applied_coupon.cart_minimum) %> cart minimum amount</p>
       <% end %>
       <%= button_to 'Remove Coupon', remove_coupon_path %>
     <% else %>
