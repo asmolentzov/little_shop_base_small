@@ -33,14 +33,41 @@ class Cart
     end
   end
 
-  def subtotal(item_id)
+  def subtotal(item_id, coupon = nil)
     item = Item.find(item_id)
-    item.price * count_of(item_id)
+    subtotal = item.price * count_of(item_id)
+    if coupon && coupon.user == item.user
+      subtotal = apply_coupon(item, coupon, subtotal)
+    end
+    subtotal
   end
 
-  def grand_total
+  def grand_total(coupon = nil)
+    coupon = Coupon.find(coupon["id"]) if coupon
     @contents.keys.map do |item_id|
-      subtotal(item_id)
+      subtotal(item_id, coupon)
     end.sum
+  end
+  
+  def pre_discount_total
+    @contents.keys.sum do |item_id|
+      Item.find(item_id).price * count_of(item_id)
+    end
+  end
+  
+  def apply_coupon(item, coupon, subtotal)
+    if coupon.coupon_type == 'percentage'
+      subtotal -= ((coupon.amount / 100.0) * subtotal)
+    elsif coupon.cart_minimum < pre_discount_total
+      difference = subtotal - coupon.amount
+      if (difference) >= 0
+        coupon.amount = 0
+        subtotal = difference
+      else
+        coupon.amount = difference.abs
+        subtotal = 0
+      end
+    end
+    subtotal
   end
 end

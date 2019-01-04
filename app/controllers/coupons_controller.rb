@@ -14,7 +14,6 @@ class CouponsController < ApplicationController
       flash[:success] = "Coupon #{@coupon.code} was successfully created!"
       redirect_to coupons_path
     else
-      @errors = @coupon.errors
       render :new
     end
   end
@@ -31,20 +30,36 @@ class CouponsController < ApplicationController
   end
   
   def update
-    coupon = Coupon.find(params[:id])
-    if coupon.update(coupon_params)
-      flash[:success] = "Coupon #{coupon.code} was successfully updated!"
+    @coupon = Coupon.find(params[:id])
+    if @coupon.update(coupon_params)
+      flash[:success] = "Coupon #{@coupon.code} was successfully updated!"
       redirect_to coupons_path
     else
-      @coupon = Coupon.find(params[:id])
-      @errors = coupon.errors
       render :edit
     end
+  end
+  
+  def apply
+    coupon = Coupon.find_by(code: code_params[:code])
+    session[:coupon] = coupon
+    flash[:success] = "Coupon #{coupon.code} was successfully applied!"
+    redirect_to cart_path
+  end
+  
+  def remove
+    code = session[:coupon]['code']
+    session[:coupon] = nil
+    flash[:success] = "Coupon #{code} was successfully removed"
+    redirect_to cart_path
   end
   
   private
   
   def coupon_params
     params.require(:coupon).permit(:coupon_type, :amount, :cart_minimum, :code)
+  end
+  
+  def code_params
+    params.require(:coupon).permit(:code)
   end
 end

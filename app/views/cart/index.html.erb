@@ -1,7 +1,21 @@
 <% if @cart.contents.empty? %>
   <p>Your cart is empty</p>
 <% else %>
-  Total: <%= number_to_currency(@cart.grand_total) %>
+  <div id="coupon">    
+    <% if @applied_coupon %>
+      <p>Subtotal: <%= number_to_currency@cart.pre_discount_total %></p>
+      <p>Coupon <%= @applied_coupon['code'] %> discount: <%= @applied_coupon['amount'] %>%</p>
+      <%= button_to 'Remove Coupon', remove_coupon_path %>
+    <% else %>
+      Add Coupon:
+      <%= form_for @coupon, url: apply_coupon_path do |f| %>
+        <%= f.label :coupon_code %>
+        <%= f.text_field :code %>
+        <%= f.submit 'Apply Coupon' %>
+      <% end %>
+    <% end %>
+  </div>
+  <p>Grand Total: <%= number_to_currency(@cart.grand_total(@applied_coupon)) %></p>
 
   <%= button_to "Empty cart", cart_empty_path, method: :delete %>
 
