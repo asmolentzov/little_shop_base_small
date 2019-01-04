@@ -116,4 +116,8 @@ class User < ApplicationRecord
   def my_placeholder_image_items
     items.where(image: 'https://picsum.photos/200/300/?image=524')
   end
+  
+  def my_number_unfulfilled_orders
+    my_pending_orders.count
+  end
 end
