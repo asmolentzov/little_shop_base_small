@@ -121,7 +121,13 @@ RSpec.describe Order, type: :model do
       order_3 = create(:order)
       coupon_3 = create(:dollar_coupon, amount: 2, cart_minimum: 20)
       oi_4 = create(:coupon_order_item, price: 10, quantity: 1, coupon: coupon_3, order: order_3)
-      expect(order_3.total_cost).to eq((oi_4.price * oi_4.quantity))
+      expect(order_3.total_cost).to eq(oi_4.price * oi_4.quantity)
+      
+      # Dollars coupon where coupon amount exceeds merchant items amount
+      order_4 = create(:order)
+      coupon_4 = create(:dollar_coupon, amount: 10)
+      oi_5 = create(:coupon_order_item, price: 5, quantity: 1, coupon: coupon_4, order: order_4)
+      expect(order_4.total_cost).to eq(0)
     end
 
     it '.my_item_count' do

@@ -53,7 +53,9 @@ class Order < ApplicationRecord
       else
         discount = 0
       end
-      coupon_order_items_sum - discount + other_order_items_sum
+      discount_total = coupon_order_items_sum - discount 
+      discount_total = 0 if discount_total < 0
+      discount_total + other_order_items_sum
     else
       oi = order_items.pluck("sum(quantity*price)")
       oi.sum
