@@ -21,6 +21,7 @@ item_2 = create(:item, user: merchant_2)
 item_3 = create(:item, user: merchant_3)
 item_4 = create(:item, user: merchant_4)
 create_list(:item, 10, user: merchant_1)
+create_list(:item, 5, user: merchant_1, image: 'https://picsum.photos/200/300/?image=524')
 
 inactive_item_1 = create(:inactive_item, user: merchant_1)
 inactive_item_2 = create(:inactive_item, user: inactive_merchant_1)
