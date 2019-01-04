@@ -9,12 +9,13 @@ class Profile::OrdersController < ApplicationController
     order = Order.create(user: current_user, status: :pending)
     coupon = Coupon.find(session[:coupon]['id']) if session[:coupon]
     @cart.items.each do |item|
-      order.order_items.create!(
+      oi_coupon = coupon if coupon && coupon.user == item.user
+      order.order_items.create(
         item: item,
         price: item.price,
         quantity: @cart.count_of(item.id),
         fulfilled: false,
-        coupon: coupon)
+        coupon: oi_coupon)
     end
     session[:cart] = nil
     if coupon
