@@ -102,19 +102,22 @@ describe 'Coupon apply workflow' do
       expect(page).to_not have_content("Add Coupon")
       expect(page).to_not have_button("Apply Coupon")
       
-      expect(page).to have_link('Remove Coupon')
-      click_link('Remove Coupon')
+      expect(page).to have_button('Remove Coupon')
+      click_button('Remove Coupon')
       
       expect(current_path).to eq(cart_path)
-      expect(page).to_not have_content(@coupon.code)
-      expect(page).to have_content('Add Coupon')
-      expect(page).to_not have_link('Remove Coupon')
+      expect(page).to have_content("Coupon #{@coupon.code} was successfully removed")
+      within "#coupon" do  
+        expect(page).to_not have_content(@coupon.code)
+        expect(page).to have_content('Add Coupon')
+        expect(page).to_not have_button('Remove Coupon')
+      end
       
       fill_in :coupon_code, with: @coupon_2.code
       click_button 'Apply Coupon'
       
       expect(current_path).to eq(cart_path)
-      expect(page).to have_content("Coupon #{@coupon.code} was successfully applied!")
+      expect(page).to have_content("Coupon #{@coupon_2.code} was successfully applied!")
     end
   end
 end

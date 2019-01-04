@@ -46,6 +46,13 @@ class CouponsController < ApplicationController
     redirect_to cart_path
   end
   
+  def remove
+    code = session[:coupon]['code']
+    session[:coupon] = nil
+    flash[:success] = "Coupon #{code} was successfully removed"
+    redirect_to cart_path
+  end
+  
   private
   
   def coupon_params

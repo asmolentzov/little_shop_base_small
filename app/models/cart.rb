@@ -64,7 +64,7 @@ class Cart
         coupon.amount = 0
         subtotal = difference
       else
-        coupon.amount = abs(difference)
+        coupon.amount = difference.abs
         subtotal = 0
       end
     end
