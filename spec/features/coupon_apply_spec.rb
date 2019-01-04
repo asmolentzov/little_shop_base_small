@@ -33,7 +33,7 @@ describe 'Coupon apply workflow' do
       new_total = @item.price - ((@coupon.amount / 100.0) * @item.price)
       
       expect(page).to have_content("Subtotal: #{number_to_currency(@item.price)}")
-      expect(page).to have_content("Coupon #{@coupon.code} discount: #{@coupon.amount}%")
+      expect(page).to have_content("Coupon #{@coupon.code} discount: #{@coupon.amount}% for items from merchant: #{@coupon.user.name}")
       expect(page).to have_content("Grand Total: #{number_to_currency(new_total)}")
     end
   end
@@ -195,7 +195,7 @@ describe 'Coupon apply workflow' do
       
       within "#coupon" do
         expect(page).to have_content("Subtotal: #{number_to_currency(@item.price + @item_2.price + @item_3.price)}")
-        expect(page).to have_content("Coupon #{@coupon.code} discount: #{number_to_currency(@coupon.amount)}")
+        expect(page).to have_content("Coupon #{@coupon.code} discount: #{number_to_currency(@coupon.amount)} from merchant #{@coupon.user.name}")
       end
       
       discount_total = @item.price + @item_2.price + @item_3.price - @coupon.amount
