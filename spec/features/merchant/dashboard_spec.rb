@@ -274,6 +274,19 @@ RSpec.describe 'Merchant Dashboard page' do
       end
     end
   end
+  
+  it 'should show me a to do list' do
+    merchant = create(:merchant)
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(merchant)
+    
+    visit dashboard_path
+    
+    expect(page).to have_content("To Do List")
+    within "#to-do" do
+      expect(page).to have_content("Items Using Placeholder Images")
+      expect(page).to have_content("Unfulfilled Orders")
+    end
+  end
 
   context 'as an admin' do
   end
