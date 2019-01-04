@@ -41,8 +41,12 @@ class CouponsController < ApplicationController
   
   def apply
     coupon = Coupon.find_by(code: code_params[:code])
-    session[:coupon] = coupon
-    flash[:success] = "Coupon #{coupon.code} was successfully applied!"
+    if coupon
+      session[:coupon] = coupon
+      flash[:success] = "Coupon #{coupon.code} was successfully applied!"
+    else
+      flash[:error] = "Coupon #{code_params[:code]} is not a valid coupon"
+    end
     redirect_to cart_path
   end
   
