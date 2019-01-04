@@ -6,7 +6,7 @@ class CartController < ApplicationController
   def index
     @items = @cart.items
     @coupon = Coupon.new
-    @applied_coupon = session[:coupon]
+    @applied_coupon = Coupon.find(session[:coupon]['id']) if session[:coupon]
   end
 
   def add_item

@@ -153,4 +153,54 @@ describe 'Coupon apply workflow' do
       expect(page).to have_content("Grand Total: #{number_to_currency(@item.price)}")
     end
   end
+  
+  describe 'I can continue shopping and the cart reflects the updates' do
+    before(:each) do
+      @merchant = create(:merchant)
+      @item = create(:item, user: @merchant, price: 10)
+      @item_2 = create(:item, user: @merchant)
+      @item_3 = create(:item)
+      @coupon = create(:dollar_coupon, user: @merchant, amount: 10)
+    end
+    scenario 'as a visitor' do
+      visit item_path(@item)
+    end
+    scenario 'as a registered user' do
+      customer = create(:user)
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(customer)
+      
+      visit item_path(@item)
+    end
+    
+    after(:each) do
+      click_button "Add to Cart"
+      
+      visit cart_path
+      
+      fill_in :coupon_code, with: @coupon.code
+      click_button "Apply Coupon"
+      
+      expect(current_path).to eq(cart_path)
+      expect(page).to have_content("Coupon #{@coupon.code} was successfully applied!")
+      
+      visit item_path(@item_2)
+      click_button "Add to Cart"
+      visit item_path(@item_3)
+      click_button "Add to Cart"
+      
+      visit cart_path
+      
+      expect(page).to have_content(@coupon.code)
+      expect(page).to_not have_content('Add Coupon')
+      
+      within "#coupon" do
+        expect(page).to have_content("Subtotal: #{number_to_currency(@item.price + @item_2.price + @item_3.price)}")
+        expect(page).to have_content("Coupon #{@coupon.code} discount: #{number_to_currency(@coupon.amount)}")
+      end
+      
+      discount_total = @item.price + @item_2.price + @item_3.price - @coupon.amount
+      
+      expect(page).to have_content("Grand Total: #{number_to_currency(discount_total)}")
+    end
+  end
 end

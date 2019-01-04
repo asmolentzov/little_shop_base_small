@@ -43,7 +43,6 @@ class Cart
   end
 
   def grand_total(coupon = nil)
-    coupon = Coupon.find(coupon["id"]) if coupon
     @contents.keys.map do |item_id|
       subtotal(item_id, coupon)
     end.sum
