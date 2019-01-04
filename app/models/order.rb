@@ -85,6 +85,7 @@ class Order < ApplicationRecord
   end
   
   def coupon
-    
+    oi = order_items.where.not(coupon_id: nil)
+    oi.empty? ? nil : oi.first.coupon
   end
 end
