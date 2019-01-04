@@ -11,7 +11,17 @@ You have no orders yet
       <p>Last Update: <%= order.last_update %></p>
       <p>Status: <%= order.status %></p>
       <p>Item Count: <%= order.total_item_count %></p>
-      <p>Total Cost: <%= order.total_cost %></p>
+      <% if order.coupon %>
+        <p>Coupon applied: <%= order.coupon.code %> for merchant: <%= order.coupon.user %></p>
+        <% if order.coupon.coupon_type == 'percentage' %>
+          <p>Discount: <%= order.coupon.amount %>%</p>
+        <% else %>
+          <p>Discount: <%= number_to_currency(order.coupon.amount) %></p>
+          <p><%= number_to_currency(order.coupon.cart_minimum) %> cart minimum amount</p>
+        <% end %>
+        <p></p>
+      <% end %>
+      <p>Total Cost: <%= number_to_currency(order.total_cost) %></p>
     <% end %>
   </div>
   </div>

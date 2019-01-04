@@ -203,4 +203,63 @@ describe 'Coupon apply workflow' do
       expect(page).to have_content("Grand Total: #{number_to_currency(discount_total)}")
     end
   end
+  
+  describe 'A coupon code is used after the customer checks out' do
+    before(:each) do
+      @merchant = create(:merchant)
+      @item = create(:item, user: @merchant)
+      @coupon = create(:percent_coupon, user: @merchant)
+    end
+    scenario 'as a visitor who logs in' do
+      visit item_path(@item)
+      click_button "Add to Cart"
+      
+      visit cart_path
+      
+      fill_in :coupon_code, with: @coupon.code
+      click_button "Apply Coupon"
+      
+      customer = create(:user)
+      visit login_path
+      fill_in :email, with: customer.email
+      fill_in :password, with: customer.password
+      click_button 'Log in' 
+      
+      visit cart_path
+    end
+    scenario 'as a registered user' do
+      customer = create(:user)
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(customer)
+      
+      visit item_path(@item)
+      click_button "Add to Cart"
+      
+      visit cart_path
+      
+      fill_in :coupon_code, with: @coupon.code
+      click_button "Apply Coupon"
+    end
+    
+    after(:each) do
+      click_button 'Check out' 
+      
+      expect(current_path).to eq(profile_path)
+      click_link 'My Orders'
+      
+      order = Order.last
+      within "#order-#{order.id}" do
+        expect(page).to have_content(@coupon.code)
+      end
+      expect(Coupon.find(@coupon.id).used).to eq(true)
+      
+      visit item_path(@item)
+      click_button "Add to Cart"
+      
+      visit cart_path
+      fill_in :coupon_code, with: @coupon.code
+      click_button 'Apply Coupon' 
+      
+      expect(page).to have_content("Coupon #{@coupon.code} is not a valid coupon")
+    end
+  end
 end

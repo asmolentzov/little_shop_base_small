@@ -7,14 +7,20 @@ class Profile::OrdersController < ApplicationController
 
   def create
     order = Order.create(user: current_user, status: :pending)
+    coupon = Coupon.find(session[:coupon]['id']) if session[:coupon]
     @cart.items.each do |item|
       order.order_items.create!(
         item: item,
         price: item.price,
         quantity: @cart.count_of(item.id),
-        fulfilled: false)
+        fulfilled: false,
+        coupon: coupon)
     end
     session[:cart] = nil
+    if coupon
+      coupon.update(used: true)
+      session[:coupon] = nil
+    end
     @cart = Cart.new({})
     flash[:success] = "You have successfully checked out!"
 

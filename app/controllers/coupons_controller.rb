@@ -41,7 +41,7 @@ class CouponsController < ApplicationController
   
   def apply
     coupon = Coupon.find_by(code: code_params[:code])
-    if coupon
+    if coupon && !(coupon.used)
       session[:coupon] = coupon
       flash[:success] = "Coupon #{coupon.code} was successfully applied!"
     else

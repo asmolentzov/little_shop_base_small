@@ -182,5 +182,22 @@ RSpec.describe Order, type: :model do
       expect(order.item_fulfilled?(item_1.id)).to eq(false)
       expect(order.item_fulfilled?(item_2.id)).to eq(true)
     end
+    
+    it '.coupon' do
+      expect(@order.coupon).to eq(nil)
+      
+      coupon = create(:percent_coupon)
+      
+      order = create(:order)
+      create(:fulfilled_order_item, order: order, coupon: coupon)
+      expect(order.coupon).to eq(coupon)
+      order = create(:order)
+      create(:order_item, order: order, coupon: coupon)
+      expect(order.coupon).to eq(coupon)
+      
+      order = create(:order)
+      create(:order_item, order: order)
+      expect(order.coupon).to eq(nil)
+    end
   end
 end

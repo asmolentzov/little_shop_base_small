@@ -83,4 +83,9 @@ class Order < ApplicationRecord
   def item_fulfilled?(item_id)
     order_items.where(item_id: item_id).pluck(:fulfilled).first
   end
+  
+  def coupon
+    oi = order_items.where.not(coupon_id: nil)
+    oi.empty? ? nil : oi.first.coupon
+  end
 end

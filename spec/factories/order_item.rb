@@ -9,4 +9,7 @@ FactoryBot.define do
   factory :fulfilled_order_item, parent: :order_item do
     fulfilled { true }
   end
+  factory :coupon_order_item, parent: :order_item do
+    association :coupon, factory: :dollar_coupon
+  end
 end
