@@ -304,6 +304,33 @@ RSpec.describe 'Merchant Dashboard page' do
       expect(page).to_not have_content(item_2.name)
     end
   end
+  
+  it 'should let me update items with placeholder images' do
+    merchant = create(:merchant)
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(merchant)
+    
+    item_1 = create(:item, user: merchant, image: 'https://picsum.photos/200/300/?image=524')
+    item_2 = create(:item, user: merchant)
+    item_3 = create(:item, user: merchant, image: 'https://picsum.photos/200/300/?image=524')
+    
+    visit dashboard_path
+    
+    within "#to-do" do
+      click_link(item_1.name)
+    end
+    expect(current_path).to eq(edit_dashboard_item_path(item_1))
+    fill_in :item_image, with: 'https://picsum.photos/200/300/?image=5'
+    click_button 'Update Item'
+    
+    expect(current_path).to eq(dashboard_items_path)
+    click_link('Dashboard')
+    
+    within "#to-do" do
+      expect(page).to have_link(item_3.name)
+      expect(page).to_not have_link(item_1.name)
+      expect(page).to_not have_link(item_2.name)
+    end
+  end
 
   context 'as an admin' do
   end

@@ -16,7 +16,7 @@
     <h5>Items Using Placeholder Images</h5>
     <ul>
     <% @placeholder_image_items.each do |item| %>  
-      <%= link_to item.name %>
+      <%= link_to item.name, edit_dashboard_item_path(item) %>
     <% end %>
     </ul>
     <h5>Unfulfilled Orders</h5>
