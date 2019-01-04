@@ -43,8 +43,21 @@ class Order < ApplicationRecord
   end
 
   def total_cost
-    oi = order_items.pluck("sum(quantity*price)")
-    oi.sum
+    if coupon
+      coupon_order_items_sum = order_items.where.not(coupon_id: nil).pluck("sum(quantity*price)").sum
+      other_order_items_sum = order_items.where(coupon_id: nil).pluck("sum(quantity*price)").sum
+      if coupon.coupon_type == 'percentage'
+        discount = coupon_order_items_sum * (coupon.amount / 100.0)
+      elsif coupon.cart_minimum < coupon_order_items_sum
+        discount = coupon.amount
+      else
+        discount = 0
+      end
+      coupon_order_items_sum - discount + other_order_items_sum
+    else
+      oi = order_items.pluck("sum(quantity*price)")
+      oi.sum
+    end
   end
 
   def my_item_count(merchant_id)

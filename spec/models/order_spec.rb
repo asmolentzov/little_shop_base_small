@@ -92,7 +92,36 @@ RSpec.describe Order, type: :model do
     end
 
     it '.total_cost' do
+      # No coupons
       expect(@order.total_cost).to eq((@oi_1.quantity*@oi_1.price) + (@oi_2.quantity*@oi_2.price))
+      
+      # Percentage coupon
+      order = create(:order)
+      coupon = create(:percent_coupon)
+      oi = create(:coupon_order_item, coupon: coupon, order: order)
+      expect(order.total_cost).to eq((oi.price * oi.quantity) - ((oi.price * oi.quantity) * (coupon.amount / 100.0)))
+      
+      # Dollars coupon
+      order_2 = create(:order)
+      coupon_2 = create(:dollar_coupon, amount: 2)
+      oi_2 = create(:coupon_order_item, price: 10, coupon: coupon_2, order: order_2)
+      expect(order_2.total_cost).to eq((oi_2.price * oi_2.quantity) - coupon_2.amount)
+      
+      # Dollars coupon with multiple items
+      oi_3 = create(:coupon_order_item, coupon: coupon_2, order: order_2)
+      expect(order_2.total_cost).to eq((oi_3.price * oi_3.quantity) + (oi_2.price * oi_2.quantity) - coupon_2.amount)
+      
+      # Dollars coupon with minimum cart amount met
+      order_3 = create(:order)
+      coupon_3 = create(:dollar_coupon, amount: 2, cart_minimum: 10)
+      oi_4 = create(:coupon_order_item, price: 20, coupon: coupon_3, order: order_3)
+      expect(order_3.total_cost).to eq((oi_4.price * oi_4.quantity) - coupon_3.amount)
+      
+      # Dollars coupon with minimum cart amount not met
+      order_3 = create(:order)
+      coupon_3 = create(:dollar_coupon, amount: 2, cart_minimum: 20)
+      oi_4 = create(:coupon_order_item, price: 10, quantity: 1, coupon: coupon_3, order: order_3)
+      expect(order_3.total_cost).to eq((oi_4.price * oi_4.quantity))
     end
 
     it '.my_item_count' do

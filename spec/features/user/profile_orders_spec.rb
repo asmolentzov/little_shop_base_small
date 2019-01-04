@@ -229,15 +229,15 @@ RSpec.describe 'Profile Orders page', type: :feature do
         expect(page).to have_content("Coupon applied: #{@coupon_1.code} for merchant: #{@coupon_1.user.name}")
         expect(page).to have_content("Discount: #{number_to_currency(@coupon_1.amount)}")
         expect(page).to have_content("#{number_to_currency(@coupon_1.cart_minimum)} cart minimum amount")
-        expect(page).to have_content("Item Count: #{@order.total_item_count}")
-        expect(page).to have_content("Total Cost: #{number_to_currency(@order.total_cost)}")
+        expect(page).to have_content("Item Count: #{@order_2.total_item_count}")
+        expect(page).to have_content("Total Cost: #{number_to_currency(@order_2.total_cost)}")
       end
       
       within "#order-#{@order_3.id}" do
         expect(page).to have_content("Coupon applied: #{@coupon_2.code} for merchant: #{@coupon_2.user.name}")
         expect(page).to have_content("Discount: #{@coupon_2.amount}%")
-        expect(page).to have_content("Item Count: #{@order.total_item_count}")
-        expect(page).to have_content("Total Cost: #{number_to_currency(@order.total_cost)}")
+        expect(page).to have_content("Item Count: #{@order_3.total_item_count}")
+        expect(page).to have_content("Total Cost: #{number_to_currency(@order_3.total_cost)}")
       end
     end
   end
