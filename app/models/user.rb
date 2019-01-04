@@ -120,4 +120,9 @@ class User < ApplicationRecord
   def my_number_unfulfilled_orders
     my_pending_orders.count
   end
+  
+  def my_revenue_unfulfilled_orders
+    my_pending_orders.joins(:order_items)
+    .sum("order_items.quantity * order_items.price")
+  end
 end
