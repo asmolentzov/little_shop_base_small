@@ -193,7 +193,7 @@ RSpec.describe 'Profile Orders page', type: :feature do
     end
   end
   
-  describe 'should show information about coupons if applied to orders' do
+  describe 'should show information about coupons if applied to orders on orders page' do
     before :each do
       yesterday = 1.day.ago
       @order = create(:order, user: @user, created_at: yesterday)
@@ -239,6 +239,34 @@ RSpec.describe 'Profile Orders page', type: :feature do
         expect(page).to have_content("Item Count: #{@order_3.total_item_count}")
         expect(page).to have_content("Total Cost: #{number_to_currency(@order_3.total_cost)}")
       end
+    end
+  end
+  
+  describe 'should show information about coupon if applied on order show page' do
+    before :each do
+      yesterday = 1.day.ago
+      @order = create(:order, user: @user, created_at: yesterday)
+      @coupon = create(:dollar_coupon)
+      @oi_1 = create(:order_item, order: @order, item: @item_1, price: 1, quantity: 1, created_at: yesterday, updated_at: yesterday)
+      @oi_2 = create(:fulfilled_order_item, order: @order, item: @item_2, price: 2, quantity: 1, created_at: yesterday, updated_at: 2.hours.ago)
+      
+      create(:coupon_order_item, order: @order, coupon: @coupon)
+    end
+    scenario 'when logged in as user' do
+      @user.reload
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@user)
+      visit profile_order_path(@order)
+    end
+    scenario 'when logged in as admin' do
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@admin)
+      visit admin_user_order_path(@user, @order)
+    end
+    after :each do
+      expect(page).to have_content("Coupon applied: #{@coupon.code} for merchant: #{@coupon.user.name}")
+      expect(page).to have_content("Discount: #{number_to_currency(@coupon.amount)}")
+      expect(page).to have_content("#{number_to_currency(@coupon.cart_minimum)} cart minimum amount")
+      expect(page).to have_content("Item Count: #{@order.total_item_count}")
+      expect(page).to have_content("Total Cost: #{number_to_currency(@order.total_cost)}")
     end
   end
 end
