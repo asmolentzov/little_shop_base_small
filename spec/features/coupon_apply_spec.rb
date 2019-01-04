@@ -250,7 +250,7 @@ describe 'Coupon apply workflow' do
       within "#order-#{order.id}" do
         expect(page).to have_content(@coupon.code)
       end
-      expect(@coupon.used).to eq(true)
+      expect(Coupon.find(@coupon.id).used).to eq(true)
       
       visit item_path(@item)
       click_button "Add to Cart"
