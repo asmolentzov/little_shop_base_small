@@ -350,6 +350,12 @@ RSpec.describe 'Merchant Dashboard page' do
       # Standard unfulfilled order 
       oi_1 = create(:order_item, item: item_1, order: order_1)
       
+      visit dashboard_path
+      
+      within "#to-do" do
+        expect(page).to have_content("You have 1 unfulfilled order, worth #{number_to_currency(oi_1.price * oi_1.quantity)}")
+      end
+      
       # Order with one item fulfilled and one unfulfilled
       oi_2 = create(:order_item, item: item_2, order: order_2)
       create(:fulfilled_order_item, item: item_1, order: order_2)
