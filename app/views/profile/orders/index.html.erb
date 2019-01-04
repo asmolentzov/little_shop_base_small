@@ -19,7 +19,6 @@ You have no orders yet
           <p>Discount: <%= number_to_currency(order.coupon.amount) %></p>
           <p><%= number_to_currency(order.coupon.cart_minimum) %> cart minimum amount</p>
         <% end %>
-        <p></p>
       <% end %>
       <p>Total Cost: <%= number_to_currency(order.total_cost) %></p>
     <% end %>
