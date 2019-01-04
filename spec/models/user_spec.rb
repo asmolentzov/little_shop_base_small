@@ -103,6 +103,15 @@ RSpec.describe User, type: :model do
       expect(user.inventory_check(item.id)).to eq(nil)
       expect(merchant.inventory_check(item.id)).to eq(item.inventory)
     end
+    
+    it '.my_placeholder_image_items' do
+      merchant = create(:merchant)
+      item_1 = create(:item, user: merchant, image: 'https://picsum.photos/200/300/?image=524')
+      item_2 = create(:item, user: merchant)
+      item_3 = create(:item, user: merchant, image: 'https://picsum.photos/200/300/?image=524')
+      
+      expect(merchant.my_placeholder_image_items).to eq([item_1, item_3])
+    end
 
     describe 'merchant stats methods' do
       before :each do
