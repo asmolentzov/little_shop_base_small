@@ -157,10 +157,10 @@ describe 'Coupon apply workflow' do
   describe 'I can continue shopping and the cart reflects the updates' do
     before(:each) do
       @merchant = create(:merchant)
-      @item = create(:item, user: @merchant)
+      @item = create(:item, user: @merchant, price: 10)
       @item_2 = create(:item, user: @merchant)
       @item_3 = create(:item)
-      @coupon = create(:percent_coupon, user: @merchant)
+      @coupon = create(:dollar_coupon, user: @merchant, amount: 10)
     end
     scenario 'as a visitor' do
       visit item_path(@item)
@@ -195,9 +195,11 @@ describe 'Coupon apply workflow' do
       
       within "#coupon" do
         expect(page).to have_content("Subtotal: #{number_to_currency(@item.price + @item_2.price + @item_3.price)}")
-        expect(page).to have_content("Coupon #{@coupon.code} discount: #{@coupon.amount}%")
+        expect(page).to have_content("Coupon #{@coupon.code} discount: #{number_to_currency(@coupon.amount)}")
       end
-      discount_total = @item.price + @item_2.price + @item_3.price - ((@item.price + @item_2.price) * (@coupon.amount / 100.0))
+      
+      discount_total = @item.price + @item_2.price + @item_3.price - @coupon.amount
+      save_and_open_page
       expect(page).to have_content("Grand Total: #{number_to_currency(discount_total)}")
     end
   end
