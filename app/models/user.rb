@@ -112,4 +112,8 @@ class User < ApplicationRecord
       .order('revenue desc')
       .limit(3)
   end
+  
+  def my_placeholder_image_items
+    items.where(image: 'https://picsum.photos/200/300/?image=524')
+  end
 end
