@@ -387,7 +387,7 @@ RSpec.describe 'Merchant Dashboard page' do
       order_2 = create(:order)
       
       oi_1 = create(:coupon_order_item, item: item_1, order: order_1, coupon: coupon)
-      oi_2 = create(:coupon_order_item, item: item_2, order: order_1, coupon: coupon_2)
+      oi_2 = create(:coupon_order_item, item: item_2, order: order_2, coupon: coupon_2)
       
       visit dashboard_path
       
