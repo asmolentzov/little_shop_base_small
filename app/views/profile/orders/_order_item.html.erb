@@ -8,12 +8,8 @@
     <p>Price: <%= number_to_currency(oitem.price) %></p>
     <p>Quantity: <%= oitem.quantity %></p>
     <p>Subtotal: <%= number_to_currency(oitem.subtotal) %></p>
-    <% if oitem.coupon && oitem.coupon.cart_minimum < order.my_revenue_value(oitem.item.user) %>
-      <% if oitem.coupon.coupon_type == 'percentage' %>
-        <p>Discount: <%= oitem.coupon.amount %>%</p>
-      <% else %>
-        <p>Discount: <%= number_to_currency(oitem.coupon.amount) %></p>
-      <% end %>
+    <% if oitem.coupon && oitem.coupon.coupon_type == 'percentage' %>
+      <p>Discount: <%= oitem.coupon.amount %>%</p>
     <% end %>
     <p>Fulfilled: <%= oitem.fulfilled ? 'Yes' : 'No' %></p>
   </div>
