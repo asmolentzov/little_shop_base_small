@@ -1,14 +1,14 @@
 <% if @cart.contents.empty? %>
   <p>Your cart is empty</p>
 <% else %>
-  <% if @applied_coupon %>
+  <% if applied_coupon %>
     <h4>Subtotal: <%= number_to_currency@cart.pre_discount_total %></h4>
     <div id="coupon">    
-      <% if @applied_coupon.coupon_type == 'percentage' %>
-        <p>Coupon <%= @applied_coupon.code %> discount: <%= @applied_coupon.amount %>% for items from merchant: <%= @applied_coupon.user.name %></p>
+      <% if applied_coupon.coupon_type == 'percentage' %>
+        <p>Coupon <%= applied_coupon.code %> discount: <%= applied_coupon.amount %>% for items from merchant: <%= applied_coupon.user.name %></p>
       <% else %>
-        <p>Coupon <%= @applied_coupon.code %> discount: <%= number_to_currency(@applied_coupon.amount) %> from merchant <%= @applied_coupon.user.name %></p>
-        <p><%= number_to_currency(@applied_coupon.cart_minimum) %> cart minimum amount</p>
+        <p>Coupon <%= applied_coupon.code %> discount: <%= number_to_currency(applied_coupon.amount) %> from merchant <%= applied_coupon.user.name %></p>
+        <p><%= number_to_currency(applied_coupon.cart_minimum) %> cart minimum amount</p>
       <% end %>
       <%= button_to 'Remove Coupon', remove_coupon_path %>
     </div>
@@ -22,7 +22,7 @@
         <% end %>
       </div>
     <% end %>
-  <h2>Grand Total: <%= number_to_currency(@cart.grand_total(@applied_coupon)) %></h2>
+  <h2>Grand Total: <%= number_to_currency(@cart.grand_total(applied_coupon)) %></h2>
 
   <%= button_to "Empty cart", cart_empty_path, method: :delete %>
 

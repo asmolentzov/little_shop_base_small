@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
-  helper_method :current_user, :current_merchant?, :current_admin?
+  helper_method :current_user, :current_merchant?, :current_admin?, :applied_coupon
 
   before_action :build_cart
 
@@ -19,5 +19,9 @@ class ApplicationController < ActionController::Base
 
   def build_cart
     @cart ||= Cart.new(session[:cart])
+  end
+  
+  def applied_coupon
+    @applied_coupon ||= Coupon.find(session[:coupon]['id']) if session[:coupon]
   end
 end
