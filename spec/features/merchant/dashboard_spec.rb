@@ -276,10 +276,11 @@ RSpec.describe 'Merchant Dashboard page' do
   end
   
   context 'To Do List' do
+    before(:each) do
+      @merchant = create(:merchant)
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(@merchant)
+    end
     it 'should show me a to do list' do
-      merchant = create(:merchant)
-      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(merchant)
-      
       visit dashboard_path
       
       expect(page).to have_content("To Do List")
@@ -289,13 +290,10 @@ RSpec.describe 'Merchant Dashboard page' do
       end
     end
     
-    it 'should show me all items that are using placeholder images' do
-      merchant = create(:merchant)
-      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(merchant)
-      
-      item_1 = create(:item, user: merchant, image: 'https://picsum.photos/200/300/?image=524')
-      item_2 = create(:item, user: merchant)
-      item_3 = create(:item, user: merchant, image: 'https://picsum.photos/200/300/?image=524')
+    it 'should show me all items that are using placeholder images' do      
+      item_1 = create(:item, user: @merchant, image: 'https://picsum.photos/200/300/?image=524')
+      item_2 = create(:item, user: @merchant)
+      item_3 = create(:item, user: @merchant, image: 'https://picsum.photos/200/300/?image=524')
       
       visit dashboard_path
       
@@ -307,12 +305,9 @@ RSpec.describe 'Merchant Dashboard page' do
     end
     
     it 'should let me update items with placeholder images' do
-      merchant = create(:merchant)
-      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(merchant)
-      
-      item_1 = create(:item, user: merchant, image: 'https://picsum.photos/200/300/?image=524')
-      item_2 = create(:item, user: merchant)
-      item_3 = create(:item, user: merchant, image: 'https://picsum.photos/200/300/?image=524')
+      item_1 = create(:item, user: @merchant, image: 'https://picsum.photos/200/300/?image=524')
+      item_2 = create(:item, user: @merchant)
+      item_3 = create(:item, user: @merchant, image: 'https://picsum.photos/200/300/?image=524')
       
       visit dashboard_path
       
@@ -334,12 +329,9 @@ RSpec.describe 'Merchant Dashboard page' do
     end
     
     it 'should show me information about my unfulfilled orders' do
-      merchant = create(:merchant)
-      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(merchant)
-      
-      item_1 = create(:item, user: merchant)
-      item_2 = create(:item, user: merchant)
-      item_3 = create(:item, user: merchant)
+      item_1 = create(:item, user: @merchant)
+      item_2 = create(:item, user: @merchant)
+      item_3 = create(:item, user: @merchant)
       
       order_1 = create(:order)
       order_2 = create(:order)
@@ -380,6 +372,47 @@ RSpec.describe 'Merchant Dashboard page' do
     end
   end
   
+  describe 'when I have pending orders with coupons applied' do
+    before(:each) do
+      merchant = create(:merchant)
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(merchant)
+      
+      item_1 = create(:item, user: merchant)
+      item_2 = create(:item, user: merchant)
+      
+      @coupon = create(:percent_coupon)
+      @coupon_2 = create(:dollar_coupon, cart_minimum: 1)
+      
+      @order_1 = create(:order)
+      @order_2 = create(:order)
+      
+      oi_1 = create(:coupon_order_item, item: item_1, order: @order_1, coupon: @coupon)
+      oi_2 = create(:coupon_order_item, item: item_2, order: @order_2, coupon: @coupon_2)
+    end
+    it 'should show me the coupon info' do      
+      visit dashboard_path
+      
+      within "#order-#{@order_1.id}" do
+        expect(page).to have_content("Coupon applied: #{@coupon.code}")
+        expect(page).to have_content("Discount: #{@coupon.amount}% on your items")
+      end
+      
+      within "#order-#{@order_2.id}" do
+        expect(page).to have_content("Coupon applied: #{@coupon_2.code}")
+        expect(page).to have_content("Discount: #{number_to_currency(@coupon_2.amount)}, cart minimum #{number_to_currency(@coupon_2.cart_minimum)}")
+      end
+    end
+    
+    it 'should show me the coupon info on the order show page' do      
+      visit dashboard_order_path(@order_1)
+      expect(page).to have_content("Coupon applied: #{@coupon.code}")
+      expect(page).to have_content("Discount: #{@coupon.amount}% on your items")
+      
+      visit dashboard_order_path(@order_2)
+      expect(page).to have_content("Coupon applied: #{@coupon_2.code}")
+      expect(page).to have_content("Discount: #{number_to_currency(@coupon_2.amount)}, cart minimum #{number_to_currency(@coupon_2.cart_minimum)}")
+    end
+  end
 
   context 'as an admin' do
   end

@@ -4,13 +4,15 @@
   <p>Last Update: <%= @order.last_update %></p>
   <p>Status: <%= @order.status %></p>
   <% if @order.coupon %>
-    <p>Coupon applied: <%= @order.coupon.code %> for merchant: <%= @order.coupon.user.name %></p>
-    <% if @order.coupon.coupon_type == 'percentage' %>
-      <p>Discount: <%= @order.coupon.amount %>% for items from merchant <%= @order.coupon.user.name %></p>
-    <% else %>
-      <p>Discount: <%= number_to_currency(@order.coupon.amount) %> from merchant <%= @order.coupon.user.name %></p>
-      <p><%= number_to_currency(@order.coupon.cart_minimum) %> cart minimum amount</p>
-    <% end %>
+    <div id="coupon">    
+      <p>Coupon applied: <%= @order.coupon.code %> for merchant: <%= @order.coupon.user.name %></p>
+      <% if @order.coupon.coupon_type == 'percentage' %>
+        <p>Discount: <%= @order.coupon.amount %>% for items from merchant <%= @order.coupon.user.name %></p>
+      <% else %>
+        <p>Discount: <%= number_to_currency(@order.coupon.amount) %> from merchant <%= @order.coupon.user.name %></p>
+        <p><%= number_to_currency(@order.coupon.cart_minimum) %> cart minimum amount</p>
+      <% end %>
+    </div>
   <% end %>
   <p>Item Count: <%= @order.total_item_count %></p>
   <p>Total Cost: <%= number_to_currency(@order.total_cost) %></p>
@@ -21,7 +23,7 @@
 
   <% @order.order_items.each do |oitem| %>
     <%= tag.div id: "oitem-#{oitem.id}" do %>
-      <%= render partial: "/profile/orders/order_item", locals: {oitem: oitem, img_width: 150} %>
+      <%= render partial: "/profile/orders/order_item", locals: {oitem: oitem, order: @order, img_width: 150} %>
     <% end %>
   <% end %>
 

@@ -11,9 +11,14 @@ describe 'As a merchant on the site' do
     click_button 'Log in'
   end
   describe 'on my dashboard' do
-    it 'I see a link to create a new coupon' do
+    it 'I see links to the coupon index and to create a new coupon' do
       visit dashboard_path
       
+      expect(page).to have_link("My Coupons")
+      click_link("My Coupons")
+      expect(current_path).to eq(coupons_path)
+      
+      visit dashboard_path
       expect(page).to have_link("Create New Coupon")
       click_link("Create New Coupon")
       expect(current_path).to eq(new_coupon_path)
