@@ -283,15 +283,12 @@ describe 'Coupon apply workflow' do
     
     after(:each) do
       # Coupon is used by someone else
-      @coupon.used = true
+      @coupon.update(used: true)
       
       click_button('Check out')
       
       expect(page).to have_content("Coupon #{@coupon.code} is no longer valid. Please remove coupon.")
       expect(current_path).to eq(cart_path)
-      
-      # No order/order_items were created
-      expect(OrderItem.last).to eq(oi)
     end
   end
   
