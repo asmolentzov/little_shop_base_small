@@ -8,24 +8,29 @@ class Profile::OrdersController < ApplicationController
   def create
     order = Order.create(user: current_user, status: :pending)
     coupon = Coupon.find(session[:coupon]['id']) if session[:coupon]
-    @cart.items.each do |item|
-      oi_coupon = coupon if coupon && coupon.user == item.user
-      order.order_items.create(
-        item: item,
-        price: item.price,
-        quantity: @cart.count_of(item.id),
-        fulfilled: false,
-        coupon: oi_coupon)
-    end
-    session[:cart] = nil
-    if coupon
-      coupon.update(used: true)
-      session[:coupon] = nil
-    end
-    @cart = Cart.new({})
-    flash[:success] = "You have successfully checked out!"
+    if coupon.used
+      flash[:error] = "Coupon #{coupon.code} is no longer valid. Please remove coupon."
+      redirect_to cart_path
+    else
+      @cart.items.each do |item|
+        oi_coupon = coupon if coupon && coupon.user == item.user
+        order.order_items.create(
+          item: item,
+          price: item.price,
+          quantity: @cart.count_of(item.id),
+          fulfilled: false,
+          coupon: oi_coupon)
+      end
+      session[:cart] = nil
+      if coupon
+        coupon.update(used: true)
+        session[:coupon] = nil
+      end
+      @cart = Cart.new({})
+      flash[:success] = "You have successfully checked out!"
 
-    redirect_to profile_path
+      redirect_to profile_path
+    end
   end
 
   def show
