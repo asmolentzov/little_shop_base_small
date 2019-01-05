@@ -43,6 +43,9 @@ class Cart
   end
 
   def grand_total(coupon = nil)
+    if coupon && coupon.coupon_type == 'dollars' && coupon.cart_minimum > merchant_pre_discount_total(coupon.user)
+      coupon = nil
+    end
     @contents.keys.map do |item_id|
       subtotal(item_id, coupon)
     end.sum
@@ -55,19 +58,19 @@ class Cart
   end
   
   def merchant_pre_discount_total(merchant)
-    merchant_items = @contents.keys.find_all do |item_id|
-      Item.find(item_id).user == merchant
-    end
-    
-    merchant_items.sum do |item_id| 
-      Item.find(item_id).price * count_of(item_id)
+    @contents.keys.sum do |item_id| 
+      if Item.find(item_id).user == merchant
+        Item.find(item_id).price * count_of(item_id)
+      else
+        0 
+      end
     end
   end
   
   def apply_coupon(item, coupon, subtotal_amount)
     if coupon.coupon_type == 'percentage'
       subtotal_amount -= ((coupon.amount / 100.0) * subtotal_amount)
-    elsif coupon.cart_minimum < pre_discount_total
+    else
       difference = subtotal_amount - coupon.amount
       if (difference) >= 0
         coupon.amount = 0
