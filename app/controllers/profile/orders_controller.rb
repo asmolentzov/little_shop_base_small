@@ -8,7 +8,7 @@ class Profile::OrdersController < ApplicationController
   def create
     order = Order.create(user: current_user, status: :pending)
     coupon = Coupon.find(session[:coupon]['id']) if session[:coupon]
-    if coupon.used
+    if coupon && coupon.used
       flash[:error] = "Coupon #{coupon.code} is no longer valid. Please remove coupon."
       redirect_to cart_path
     else
