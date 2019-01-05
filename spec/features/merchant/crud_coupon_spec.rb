@@ -30,15 +30,15 @@ describe 'As a merchant on the site' do
     end
   end
   
-  describe 'on the coupon creation form' do
-    it 'shows me a form and allows me to create a new coupon' do
-      visit new_coupon_path
+  describe 'creating a coupon' do
+    it 'on the percentage form, it shows me a form and allows me to create a new coupon' do
+      visit new_coupon_path(type: 'percentage')
       
       code = 'NEWYEAR2019'
       amount = 10
-      fill_in :coupon_coupon_type, with: 'percentage'
+      # fill_in :coupon_coupon_type, with: 'percentage'
       fill_in :coupon_amount, with: amount
-      fill_in :coupon_cart_minimum, with: 0
+      # fill_in :coupon_cart_minimum, with: 0
       fill_in :coupon_code, with: code
       click_button 'Create Coupon'
       
@@ -52,6 +52,31 @@ describe 'As a merchant on the site' do
         expect(page).to have_content("#{amount}% discount")
         expect(page).to have_content("This coupon has not been used")
       end      
+    end
+    
+    it 'on the dollars form, it shows me a form and allows me to create a new coupon' do
+      visit new_coupon_path(type: 'dollars')
+      
+      code = 'NEWYEAR2019'
+      amount = 10
+      min = 10
+      
+      fill_in :coupon_amount, with: amount
+      fill_in :coupon_code, with: code
+      fill_in :coupon_cart_minimum, with: min
+      click_button 'Create Coupon'
+      
+      expect(current_path).to eq(coupons_path)
+      coupon = Coupon.last
+      expect(coupon.code).to eq(code)
+      expect(page).to have_content("Coupon #{code} was successfully created!")
+      
+      within "#coupon-#{coupon.id}" do
+        expect(page).to have_content(code)
+        expect(page).to have_content("#{number_to_currency(amount)} discount")
+        expect(page).to have_content("#{number_to_currency(min)} cart minimum")
+        expect(page).to have_content("This coupon has not been used")
+      end
     end
 
     it 'will not allow me to create a coupon with missing or bad info' do
