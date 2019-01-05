@@ -5,7 +5,7 @@ class CouponsController < ApplicationController
   
   def new
     @coupon = Coupon.new
-    @coupon.update(coupon_type: params[:type])
+    @coupon.coupon_type = params[:type]
   end
   
   def create
