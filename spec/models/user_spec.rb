@@ -84,10 +84,12 @@ RSpec.describe User, type: :model do
       merchants = create_list(:merchant, 2)
       item_1 = create(:item, user: merchants[0])
       item_2 = create(:item, user: merchants[1])
+      item_3 = create(:item, user: merchants[0])
       orders = create_list(:order, 3)
       create(:order_item, order: orders[0], item: item_1, price: 1, quantity: 1)
       create(:order_item, order: orders[1], item: item_2, price: 1, quantity: 1)
       create(:order_item, order: orders[2], item: item_1, price: 1, quantity: 1)
+      create(:order_item, order: orders[2], item: item_3)
 
       expect(merchants[0].my_pending_orders).to eq([orders[0], orders[2]])
       expect(merchants[1].my_pending_orders).to eq([orders[1]])
@@ -111,6 +113,44 @@ RSpec.describe User, type: :model do
       item_3 = create(:item, user: merchant, image: 'https://picsum.photos/200/300/?image=524')
       
       expect(merchant.my_placeholder_image_items).to eq([item_1, item_3])
+    end
+    
+    describe 'unfulfilled orders details' do
+      before(:each) do
+        @merchant = create(:merchant)
+        item_1 = create(:item, user: @merchant)
+        item_2 = create(:item, user: @merchant)
+        item_3 = create(:item, user: @merchant)
+        
+        order_1 = create(:order)
+        order_2 = create(:order)
+        order_3 = create(:order)
+        order_4 = create(:completed_order)
+        order_5 = create(:cancelled_order)
+        
+        # Standard unfulfilled order 
+        @oi_1 = create(:order_item, item: item_1, order: order_1)
+        
+        # Order with one item fulfilled and one unfulfilled
+        @oi_2 = create(:order_item, item: item_2, order: order_2)
+        create(:fulfilled_order_item, item: item_1, order: order_2)
+        
+        # Order where merchant's only item is fulfilled (but order is not completed)
+        create(:fulfilled_order_item, item: item_3, order: order_3)
+        
+        # Completed order with fulfilled order_item
+        create(:fulfilled_order_item, item: item_3, order: order_4)
+        
+        # Cancelled order with unfulfilled order_item
+        create(:order_item, item: item_3, order: order_5)
+      end
+  
+      it '.my_number_unfulfilled_orders' do
+        expect(@merchant.my_number_unfulfilled_orders).to eq(2)
+      end
+      it '.my_revenue_unfulfilled_orders' do
+        expect(@merchant.my_revenue_unfulfilled_orders).to eq((@oi_1.price * @oi_1.quantity) + (@oi_2.price * @oi_2.quantity))
+      end
     end
 
     describe 'merchant stats methods' do

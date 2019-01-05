@@ -19,6 +19,8 @@ class MerchantsController < ApplicationController
   def show
     @merchant = current_user
     @placeholder_image_items = @merchant.my_placeholder_image_items
+    @num_unfulfilled_orders = @merchant.my_number_unfulfilled_orders
+    @revenue_unfulfilled_orders = @merchant.my_revenue_unfulfilled_orders
     @orders = @merchant.my_pending_orders
     @top_5_items = @merchant.top_items_by_quantity(5)
     @qsp = @merchant.quantity_sold_percentage
