@@ -86,7 +86,7 @@ RSpec.describe Cart do
   it '.grand_total' do
     merchant = create(:merchant)
     item_1 = create(:item, price: 20, user: merchant)
-    item_2 = create(:item, user: merchant)
+    item_2 = create(:item, price: 10, user: merchant)
     cart = Cart.new({})
     cart.add_item(item_1.id)
     cart.add_item(item_1.id)
@@ -114,11 +114,14 @@ RSpec.describe Cart do
     expect(cart.grand_total(coupon_5)).to eq(total)
     
     merchant_2 = create(:merchant)
-    item_3 = create(:item, user: merchant_2)
+    item_3 = create(:item, price: 200, user: merchant_2)
     coupon_6 = create(:percent_coupon, user: merchant_2)
     cart.add_item(item_3.id)
     new_total = total + item_3.price
     expect(cart.grand_total(coupon_6)).to eq(new_total - (item_3.price * (coupon_6.amount / 100.0)))
+    
+    coupon_7 = create(:dollar_coupon, code: 'HERE', user: merchant, amount: 10, cart_minimum: 200)
+    expect(cart.grand_total(coupon_7)).to eq(new_total)
   end
   
   it '.pre_discount_total' do
@@ -152,5 +155,17 @@ RSpec.describe Cart do
     coupon_4 = create(:dollar_coupon, amount: amount, cart_minimum: 20)
     expect(cart.apply_coupon(item, coupon_4, subtotal)).to eq(item.price)
     expect(coupon_4.amount).to eq(2)
+  end
+  
+  it 'merchant_pre_discount_total' do
+    merchant = create(:merchant)
+    item_1 = create(:item, user: merchant)
+    item_2 = create(:item)
+    cart = Cart.new({})
+    cart.add_item(item_1.id)
+    cart.add_item(item_1.id)
+    cart.add_item(item_2.id)
+    
+    expect(cart.merchant_pre_discount_total(merchant)).to eq(item_1.price * 2)
   end
 end
