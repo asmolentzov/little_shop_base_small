@@ -126,4 +126,8 @@ class User < ApplicationRecord
     my_pending_orders.joins(:order_items)
     .sum("order_items.quantity * order_items.price")
   end
+  
+  def unordered_items
+    items.left_outer_joins(:order_items).where(order_items: { id: nil })
+  end
 end
