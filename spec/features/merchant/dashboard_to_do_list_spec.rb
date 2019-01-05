@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 describe 'As a merchant on the site' do  
+  include ActionView::Helpers::NumberHelper
+  
   context 'To Do List' do
     before(:each) do
       @merchant = create(:merchant)

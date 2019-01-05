@@ -274,7 +274,6 @@ RSpec.describe 'Merchant Dashboard page' do
       end
     end
   end
-
   
   describe 'when I have pending orders with coupons applied' do
     before(:each) do

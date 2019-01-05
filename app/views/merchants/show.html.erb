@@ -23,6 +23,13 @@
     <ul>
       <li>You have <%= pluralize(@num_unfulfilled_orders, 'unfulfilled order') %>, worth <%= number_to_currency(@revenue_unfulfilled_orders) %>.</li>
     </ul>
+    <h5>Unordered Items</h5>
+    <p>The following items have never been ordered. Consider promoting them!</p>
+    <ul>
+      <% @unordered_items.each do |item| %>
+        <%= link_to item.name, items_path(anchor: "item-#{item.id}") %>
+      <% end %>
+    </ul>
   </div>
   <p><%= link_to 'My Items', dashboard_items_path %></p>
   <p><%= link_to 'My Coupons', coupons_path %></p>
