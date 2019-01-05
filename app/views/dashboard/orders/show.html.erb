@@ -7,6 +7,17 @@
   <%= @order.user.city %>, <%= @order.user.state %> <%= @order.user.zip %>
 <% end %>
 
+<% if @order.coupon %>
+  <div id="coupon">    
+    <p>Coupon applied: <%= @order.coupon.code %></p>
+    <% if @order.coupon.coupon_type == 'percentage' %>
+      <p>Discount: <%= @order.coupon.amount %>% on your items</p>
+    <% else %>
+      <p>Discount: <%= number_to_currency(@order.coupon.amount) %>, cart minimum <%= number_to_currency(@order.coupon.cart_minimum) %></p>
+    <% end %>
+  </div>
+<% end %>
+
 <%= tag.div id: 'order-details' do %>
   <p>Status: <%= @order.status %></p>
 
