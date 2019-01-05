@@ -250,7 +250,7 @@ RSpec.describe 'Profile Orders page', type: :feature do
       @oi_1 = create(:order_item, order: @order, item: @item_1, price: 1, quantity: 1, created_at: yesterday, updated_at: yesterday)
       @oi_2 = create(:fulfilled_order_item, order: @order, item: @item_2, price: 2, quantity: 1, created_at: yesterday, updated_at: 2.hours.ago)
       
-      create(:coupon_order_item, order: @order, coupon: @coupon)
+      @oi_3 = create(:coupon_order_item, order: @order, coupon: @coupon)
     end
     scenario 'when logged in as user' do
       @user.reload
@@ -267,6 +267,16 @@ RSpec.describe 'Profile Orders page', type: :feature do
       expect(page).to have_content("#{number_to_currency(@coupon.cart_minimum)} cart minimum amount")
       expect(page).to have_content("Item Count: #{@order.total_item_count}")
       expect(page).to have_content("Total Cost: #{number_to_currency(@order.total_cost)}")
+
+      within "#oitem-#{@oi_3.id}" do
+        expect(page).to have_content("Discount: #{number_to_currency(@coupon.amount)}")
+      end
+      within "#oitem-#{@oi_1.id}" do
+        expect(page).to_not have_content("Discount")
+      end
+      within "#oitem-#{@oi_2.id}" do
+        expect(page).to_not have_content("Discount")
+      end
     end
   end
 end
