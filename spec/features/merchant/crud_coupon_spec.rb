@@ -19,8 +19,13 @@ describe 'As a merchant on the site' do
       expect(current_path).to eq(coupons_path)
       
       visit dashboard_path
-      expect(page).to have_link("Create New Coupon")
-      click_link("Create New Coupon")
+      expect(page).to have_link("Create New Coupon: Percentage")
+      expect(page).to have_link("Create New Coupon: Dollars")
+      click_link("Create New Coupon: Percentage")
+      expect(current_path).to eq(new_coupon_path)
+      
+      visit dashboard_path
+      click_link("Create New Coupon: Dollars")
       expect(current_path).to eq(new_coupon_path)
     end
   end

@@ -26,7 +26,8 @@
   </div>
   <p><%= link_to 'My Items', dashboard_items_path %></p>
   <p><%= link_to 'My Coupons', coupons_path %></p>
-  <p><%= link_to 'Create New Coupon', new_coupon_path %></p>
+  <p><%= link_to 'Create New Coupon: Percentage', new_coupon_path(type: 'percentage') %></p>
+  <p><%= link_to 'Create New Coupon: Dollars', new_coupon_path(type: 'dollars') %></p>
 <% end %>
 
 <% if current_admin? %>
