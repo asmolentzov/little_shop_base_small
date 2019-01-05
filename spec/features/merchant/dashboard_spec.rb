@@ -380,8 +380,8 @@ RSpec.describe 'Merchant Dashboard page' do
       item_1 = create(:item, user: merchant)
       item_2 = create(:item, user: merchant)
       
-      @coupon = create(:percent_coupon)
-      @coupon_2 = create(:dollar_coupon, cart_minimum: 1)
+      @coupon = create(:percent_coupon, user: merchant)
+      @coupon_2 = create(:dollar_coupon, cart_minimum: 1, user: merchant)
       
       @order_1 = create(:order)
       @order_2 = create(:order)

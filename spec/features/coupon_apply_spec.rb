@@ -193,8 +193,8 @@ describe 'Coupon apply workflow' do
       expect(page).to have_content(@coupon.code)
       expect(page).to_not have_content('Add Coupon')
       
+      expect(page).to have_content("Subtotal: #{number_to_currency(@item.price + @item_2.price + @item_3.price)}")
       within "#coupon" do
-        expect(page).to have_content("Subtotal: #{number_to_currency(@item.price + @item_2.price + @item_3.price)}")
         expect(page).to have_content("Coupon #{@coupon.code} discount: #{number_to_currency(@coupon.amount)} from merchant #{@coupon.user.name}")
       end
       

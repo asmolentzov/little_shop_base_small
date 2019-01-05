@@ -1,6 +1,8 @@
 <h1>CouponsCouponsCoupons!</h1>
 
 <div id="coupons">
+  <p><%= link_to 'Create New Coupon: Percentage', new_coupon_path(type: 'percentage') %></p>
+  <p><%= link_to 'Create New Coupon: Dollars', new_coupon_path(type: 'dollars') %></p>
   <% @coupons.each do |coupon| %>
     <div id="coupon-<%= coupon.id %>">
       <h3><%= coupon.code %></h3>
