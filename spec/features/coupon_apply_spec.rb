@@ -38,6 +38,47 @@ describe 'Coupon apply workflow' do
     end
   end
   
+  describe 'I can apply a dollars coupon code with a cart minimum on my cart page' do
+    before(:each) do
+      @merchant = create(:merchant)
+      @item = create(:item, price: 10, user: @merchant)
+      @item_2 = create(:item, price: 25)
+      @coupon = create(:dollar_coupon, cart_minimum: 20, user: @merchant)
+    end
+    scenario 'as a visitor' do
+      visit item_path(@item)
+    end
+    scenario 'as a registered user' do
+      customer = create(:user)
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(customer)
+      
+      visit item_path(@item)
+    end
+    
+    after(:each) do
+      click_button "Add to Cart"
+      
+      visit item_path(@item_2)
+      click_button "Add to Cart"
+      
+      visit cart_path
+      
+      expect(page).to have_content("Add Coupon")
+      fill_in :coupon_code, with: @coupon.code
+      click_button "Apply Coupon"
+      
+      expect(current_path).to eq(cart_path)
+      expect(page).to have_content("Coupon #{@coupon.code} was successfully applied!")
+      
+      total = @item.price + @item_2.price
+      
+      expect(page).to have_content("Subtotal: #{number_to_currency(total)}")
+      expect(page).to have_content("Coupon #{@coupon.code} discount: #{number_to_currency(@coupon.amount)}  from merchant #{@coupon.user.name}")
+      expect(page).to have_content("#{number_to_currency(@coupon.cart_minimum)} cart minimum amount")
+      expect(page).to have_content("Grand Total: #{number_to_currency(total)}")
+    end
+  end
+  
   describe 'I can only apply one coupon code' do
     before(:each) do
       @merchant = create(:merchant)
@@ -193,8 +234,8 @@ describe 'Coupon apply workflow' do
       expect(page).to have_content(@coupon.code)
       expect(page).to_not have_content('Add Coupon')
       
+      expect(page).to have_content("Subtotal: #{number_to_currency(@item.price + @item_2.price + @item_3.price)}")
       within "#coupon" do
-        expect(page).to have_content("Subtotal: #{number_to_currency(@item.price + @item_2.price + @item_3.price)}")
         expect(page).to have_content("Coupon #{@coupon.code} discount: #{number_to_currency(@coupon.amount)} from merchant #{@coupon.user.name}")
       end
       

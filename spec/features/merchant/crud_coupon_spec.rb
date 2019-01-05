@@ -19,21 +19,24 @@ describe 'As a merchant on the site' do
       expect(current_path).to eq(coupons_path)
       
       visit dashboard_path
-      expect(page).to have_link("Create New Coupon")
-      click_link("Create New Coupon")
+      expect(page).to have_link("Create New Coupon: Percentage")
+      expect(page).to have_link("Create New Coupon: Dollars")
+      click_link("Create New Coupon: Percentage")
+      expect(current_path).to eq(new_coupon_path)
+      
+      visit dashboard_path
+      click_link("Create New Coupon: Dollars")
       expect(current_path).to eq(new_coupon_path)
     end
   end
   
-  describe 'on the coupon creation form' do
-    it 'shows me a form and allows me to create a new coupon' do
-      visit new_coupon_path
+  describe 'creating a coupon' do
+    it 'on the percentage form, it shows me a form and allows me to create a new coupon' do
+      visit new_coupon_path(type: 'percentage')
       
       code = 'NEWYEAR2019'
       amount = 10
-      fill_in :coupon_coupon_type, with: 'percentage'
       fill_in :coupon_amount, with: amount
-      fill_in :coupon_cart_minimum, with: 0
       fill_in :coupon_code, with: code
       click_button 'Create Coupon'
       
@@ -48,20 +51,43 @@ describe 'As a merchant on the site' do
         expect(page).to have_content("This coupon has not been used")
       end      
     end
+    
+    it 'on the dollars form, it shows me a form and allows me to create a new coupon' do
+      visit new_coupon_path(type: 'dollars')
+      
+      code = 'NEWYEAR2019'
+      amount = 10
+      min = 10
+      
+      fill_in :coupon_amount, with: amount
+      fill_in :coupon_code, with: code
+      fill_in :coupon_cart_minimum, with: min
+      click_button 'Create Coupon'
+      
+      expect(current_path).to eq(coupons_path)
+      coupon = Coupon.last
+      expect(coupon.code).to eq(code)
+      expect(page).to have_content("Coupon #{code} was successfully created!")
+      
+      within "#coupon-#{coupon.id}" do
+        expect(page).to have_content(code)
+        expect(page).to have_content("#{number_to_currency(amount)} discount")
+        expect(page).to have_content("#{number_to_currency(min)} cart minimum")
+        expect(page).to have_content("This coupon has not been used")
+      end
+    end
 
     it 'will not allow me to create a coupon with missing or bad info' do
-      visit new_coupon_path
+      visit new_coupon_path(type: 'percentage')
       
       click_button 'Create Coupon'
       
       expect(page).to have_content("Create a New Coupon!")
-      expect(page).to have_content("Coupon type can't be blank")
       expect(page).to have_content("Amount can't be blank")
       expect(page).to have_content("Code can't be blank")
       
       coupon = create(:percent_coupon, user: @merchant)
       
-      fill_in :coupon_coupon_type, with: 'percentage'
       fill_in :coupon_amount, with: -1
       fill_in :coupon_code, with: coupon.code
       click_button 'Create Coupon'
@@ -69,7 +95,6 @@ describe 'As a merchant on the site' do
       expect(page).to have_content("Create a New Coupon!")
       expect(page).to have_content("Amount must be greater than or equal to 0")
       expect(page).to have_content("Code has already been taken")
-      expect(find_field("coupon[coupon_type]").value).to eq('percentage')
       expect(find_field("coupon[code]").value).to eq(coupon.code)
     end
   end
@@ -133,7 +158,6 @@ describe 'As a merchant on the site' do
       end
       
       expect(current_path).to eq(edit_coupon_path(coupon_2))
-      expect(find_field('coupon[coupon_type]').value).to eq('dollars')
       expect(find_field('coupon[amount]').value).to eq(coupon_2.amount.to_s)
       expect(find_field('coupon[cart_minimum]').value).to eq(coupon_2.cart_minimum.to_s)
       expect(find_field('coupon[code]').value).to eq(coupon_2.code)
@@ -162,13 +186,11 @@ describe 'As a merchant on the site' do
       
       visit edit_coupon_path(coupon)
       
-      fill_in :coupon_coupon_type, with: ''
       fill_in :coupon_amount, with: ''
       fill_in :coupon_code, with: ''
       click_button('Update Coupon')
       
       expect(page).to have_content 'Edit Coupon' 
-      expect(page).to have_content("Coupon type can't be blank")
       expect(page).to have_content("Amount is not a number")
       expect(page).to have_content("Code can't be blank")
       

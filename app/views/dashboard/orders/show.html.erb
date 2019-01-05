@@ -7,7 +7,7 @@
   <%= @order.user.city %>, <%= @order.user.state %> <%= @order.user.zip %>
 <% end %>
 
-<% if @order.coupon %>
+<% if @order.coupon && @order.coupon.user == current_user %>
   <div id="coupon">    
     <p>Coupon applied: <%= @order.coupon.code %></p>
     <% if @order.coupon.coupon_type == 'percentage' %>
