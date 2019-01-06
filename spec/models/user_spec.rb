@@ -123,7 +123,7 @@ RSpec.describe User, type: :model do
       
       create(:order_item, item: item_2)
       
-      expect(merchant.unordered_items).to eq([item_1, item_3])
+      expect(merchant.unordered_items).to contain_exactly(item_1, item_3)
     end
     
     describe 'unfulfilled orders details' do
