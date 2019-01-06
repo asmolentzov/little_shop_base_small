@@ -30,7 +30,7 @@
       <p>The following items have never been ordered. Consider promoting them!</p>
       <ul>
         <% @unordered_items.each do |item| %>
-          <%= link_to item.name, dashboard_items_path(anchor: "item-#{item.id}") %>
+          <li><%= link_to item.name, dashboard_items_path(anchor: "item-#{item.id}") %></li>
         <% end %>
       </ul>
     </div>
