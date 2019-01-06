@@ -75,6 +75,7 @@ describe 'Coupon apply workflow' do
       expect(page).to have_content("Subtotal: #{number_to_currency(total)}")
       expect(page).to have_content("Coupon #{@coupon.code} discount: #{number_to_currency(@coupon.amount)}  from merchant #{@coupon.user.name}")
       expect(page).to have_content("#{number_to_currency(@coupon.cart_minimum)} cart minimum amount")
+      expect(page).to have_content("Cart Minimum for merchant #{@merchant.name} is NOT MET")
       expect(page).to have_content("Grand Total: #{number_to_currency(total)}")
     end
   end
