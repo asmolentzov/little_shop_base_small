@@ -25,7 +25,7 @@ describe 'As a merchant on the site' do
       
       visit dashboard_path
       
-      within "#to-do" do
+      within "#to-do-images" do
         expect(page).to have_link(item_1.name)
         expect(page).to have_link(item_3.name)
         expect(page).to_not have_content(item_2.name)
@@ -39,7 +39,7 @@ describe 'As a merchant on the site' do
       
       visit dashboard_path
       
-      within "#to-do" do
+      within "#to-do-images" do
         click_link(item_1.name)
       end
       expect(current_path).to eq(edit_dashboard_item_path(item_1))
@@ -49,7 +49,7 @@ describe 'As a merchant on the site' do
       expect(current_path).to eq(dashboard_items_path)
       click_link('Dashboard')
       
-      within "#to-do" do
+      within "#to-do-images" do
         expect(page).to have_link(item_3.name)
         expect(page).to_not have_link(item_1.name)
         expect(page).to_not have_link(item_2.name)
@@ -108,7 +108,7 @@ describe 'As a merchant on the site' do
       
       visit dashboard_path
       
-      within "#to-do" do
+      within "#to-do-unordered-items" do
         expect(page).to have_content("The following items have never been ordered. Consider promoting them!")
         expect(page).to have_content(item_1.name)
         expect(page).to have_content(item_3.name)
