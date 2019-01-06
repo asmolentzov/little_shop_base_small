@@ -123,7 +123,8 @@ class User < ApplicationRecord
   end
   
   def my_revenue_unfulfilled_orders
-    my_pending_orders.joins(:order_items)
+    Order.joins(order_items: :item)
+    .where("items.merchant_id=? AND orders.status=? AND order_items.fulfilled=?", self.id, 0, false)
     .sum("order_items.quantity * order_items.price")
   end
   
