@@ -9,6 +9,7 @@ User.destroy_all
 
 admin = create(:admin)
 user = create(:user)
+create(:user)
 merchant_1 = create(:merchant)
 
 merchant_2, merchant_3, merchant_4 = create_list(:merchant, 3)
@@ -20,6 +21,8 @@ item_1 = create(:item, user: merchant_1)
 item_2 = create(:item, user: merchant_2)
 item_3 = create(:item, user: merchant_3)
 item_4 = create(:item, user: merchant_4)
+item_5 = create(:item, user: merchant_1)
+item_6 = create(:item, user: merchant_3)
 create_list(:item, 10, user: merchant_1)
 create_list(:item, 5, user: merchant_1, image: 'https://picsum.photos/200/300/?image=524')
 
@@ -38,6 +41,11 @@ create(:fulfilled_order_item, order: order, item: item_4, price: 4, quantity: 1,
 order = create(:order, user: user)
 create(:order_item, order: order, item: item_1, price: 1, quantity: 1)
 create(:fulfilled_order_item, order: order, item: item_2, price: 2, quantity: 1, created_at: rng.rand(23).days.ago, updated_at: rng.rand(23).hours.ago)
+
+order = create(:order, user: user)
+coupon = create(:percent_coupon, user: merchant_1, used: true)
+create(:coupon_order_item, order: order, item: item_5, price: 1, quantity: 1, coupon: coupon)
+create(:order_item, order: order, item: item_6)
 
 order = create(:cancelled_order, user: user)
 create(:order_item, order: order, item: item_2, price: 2, quantity: 1, created_at: rng.rand(23).hour.ago, updated_at: rng.rand(59).minutes.ago)
