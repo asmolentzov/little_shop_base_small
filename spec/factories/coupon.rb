@@ -1,3 +1,5 @@
+require 'factory_bot'
+
 FactoryBot.define do
   factory :percent_coupon, class: Coupon do
     coupon_type { 'percentage' }
