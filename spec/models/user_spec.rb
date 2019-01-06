@@ -115,6 +115,17 @@ RSpec.describe User, type: :model do
       expect(merchant.my_placeholder_image_items).to eq([item_1, item_3])
     end
     
+    it '.unordered_items' do
+      merchant = create(:merchant)
+      item_1 = create(:item, user: merchant)
+      item_2 = create(:item, user: merchant)
+      item_3 = create(:item, user: merchant)
+      
+      create(:order_item, item: item_2)
+      
+      expect(merchant.unordered_items).to eq([item_1, item_3])
+    end
+    
     describe 'unfulfilled orders details' do
       before(:each) do
         @merchant = create(:merchant)
