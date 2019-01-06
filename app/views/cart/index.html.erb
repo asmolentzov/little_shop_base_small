@@ -9,6 +9,9 @@
       <% else %>
         <p>Coupon <%= applied_coupon.code %> discount: <%= number_to_currency(applied_coupon.amount) %> from merchant <%= applied_coupon.user.name %></p>
         <p><%= number_to_currency(applied_coupon.cart_minimum) %> cart minimum amount</p>
+        <% if applied_coupon.cart_minimum > @cart.merchant_pre_discount_total(applied_coupon.user) %>
+          <p>Cart Minimum for merchant <%= applied_coupon.user.name %> is NOT MET</p>
+        <% end %>
       <% end %>
       <%= button_to 'Remove Coupon', remove_coupon_path %>
     </div>
