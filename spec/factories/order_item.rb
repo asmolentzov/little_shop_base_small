@@ -1,3 +1,5 @@
+require 'factory_bot'
+
 FactoryBot.define do
   factory :order_item do
     order
