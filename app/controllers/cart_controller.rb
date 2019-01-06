@@ -6,6 +6,7 @@ class CartController < ApplicationController
   def index
     @items = @cart.items
     @coupon = Coupon.new
+    @merchant_pre_discount_total = @cart.merchant_pre_discount_total(applied_coupon.user) if applied_coupon
   end
 
   def add_item
