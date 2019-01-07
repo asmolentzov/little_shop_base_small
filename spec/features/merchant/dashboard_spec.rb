@@ -280,7 +280,7 @@ RSpec.describe 'Merchant Dashboard page' do
       merchant = create(:merchant)
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(merchant)
       
-      item_1 = create(:item, user: merchant)
+      @item_1 = create(:item, user: merchant)
       item_2 = create(:item, user: merchant)
       
       @coupon = create(:percent_coupon, user: merchant)
@@ -289,7 +289,7 @@ RSpec.describe 'Merchant Dashboard page' do
       @order_1 = create(:order)
       @order_2 = create(:order)
       
-      oi_1 = create(:coupon_order_item, item: item_1, order: @order_1, coupon: @coupon)
+      @oi_1 = create(:coupon_order_item, item: @item_1, order: @order_1, coupon: @coupon)
       oi_2 = create(:coupon_order_item, item: item_2, order: @order_2, coupon: @coupon_2)
     end
     it 'should show me the coupon info' do      
@@ -310,6 +310,11 @@ RSpec.describe 'Merchant Dashboard page' do
       visit dashboard_order_path(@order_1)
       expect(page).to have_content("Coupon applied: #{@coupon.code}")
       expect(page).to have_content("Discount: #{@coupon.amount}% on your items")
+      
+      discounted_price = (@oi_1.price * @oi_1.quantity) - (@oi_1.price * @oi_1.quantity * (@coupon.amount / 100.0))
+      within "#item-#{@item_1.id}" do
+        expect(page).to have_content("Discounted Price: #{discounted_price}")
+      end
       
       visit dashboard_order_path(@order_2)
       expect(page).to have_content("Coupon applied: #{@coupon_2.code}")
