@@ -234,5 +234,16 @@ RSpec.describe Order, type: :model do
       create(:order_item, order: order)
       expect(order.coupon).to eq(nil)
     end
+    
+    it '.discounted_item_price' do
+      merchant = create(:merchant)
+      item_1 = create(:item, user: merchant)
+      order = create(:order)
+      coupon = create(:percent_coupon)
+      
+      oi = create(:coupon_order_item, order: order, item: item_1, coupon: coupon)
+
+      expect(order.discounted_item_price(item_1.id, coupon)).to eq(oi.price - (oi.price * (coupon.amount / 100.0)))
+    end
   end
 end

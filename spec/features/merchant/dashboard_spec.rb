@@ -311,9 +311,9 @@ RSpec.describe 'Merchant Dashboard page' do
       expect(page).to have_content("Coupon applied: #{@coupon.code}")
       expect(page).to have_content("Discount: #{@coupon.amount}% on your items")
       
-      discounted_price = (@oi_1.price * @oi_1.quantity) - (@oi_1.price * @oi_1.quantity * (@coupon.amount / 100.0))
+      discounted_price = @oi_1.price - (@oi_1.price * (@coupon.amount / 100.0))
       within "#item-#{@item_1.id}" do
-        expect(page).to have_content("Discounted Price: #{discounted_price}")
+        expect(page).to have_content("Discounted Price per Coupon: #{number_to_currency(discounted_price)}")
       end
       
       visit dashboard_order_path(@order_2)

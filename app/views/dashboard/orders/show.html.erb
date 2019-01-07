@@ -26,6 +26,9 @@
       <p><%= link_to item.name, item_path(item) %></p>
       <p><img id="item-<%= item.id %>-image" alt="image for <%= item.name %>" src="<%= item.image %>" width="150" /></p>
       <p>Price: <%= number_to_currency(@order.item_price(item.id)) %></p>
+      <% if @order.coupon && @order.coupon.user == current_user %>
+        <p>Discounted Price per Coupon: <%= number_to_currency(@order.discounted_item_price(item.id, @order.coupon)) %></p>
+      <% end %>
       <p>Quantity: <%= @order.item_quantity(item.id) %></p>
       <p>
       <% if @order.item_fulfilled?(item.id) %>

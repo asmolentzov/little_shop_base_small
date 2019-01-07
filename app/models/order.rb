@@ -103,4 +103,9 @@ class Order < ApplicationRecord
     oi = order_items.where.not(coupon_id: nil)
     oi.empty? ? nil : oi.first.coupon
   end
+  
+  def discounted_item_price(item_id, coupon)
+    price = item_price(item_id)
+    price - (price * coupon.amount / 100.0)
+  end
 end
