@@ -24,5 +24,12 @@ RSpec.describe OrderItem, type: :model do
 
       expect(oi.subtotal).to eq(15)
     end
+    
+    it '.discounted_subtotal' do
+      coupon = create(:percent_coupon, amount: 10)
+      oi = create(:coupon_order_item, quantity: 5, price: 10, coupon: coupon)
+      
+      expect(oi.discounted_subtotal(coupon)).to eq(45)
+    end
   end
 end

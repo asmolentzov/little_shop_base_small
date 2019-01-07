@@ -10,6 +10,7 @@
     <p>Subtotal: <%= number_to_currency(oitem.subtotal) %></p>
     <% if oitem.coupon && oitem.coupon.coupon_type == 'percentage' %>
       <p>Discount: <%= oitem.coupon.amount %>%</p>
+      <p>Discounted Subtotal: <%= number_to_currency(oitem.discounted_subtotal(oitem.coupon)) %></p>
     <% end %>
     <p>Fulfilled: <%= oitem.fulfilled ? 'Yes' : 'No' %></p>
   </div>
