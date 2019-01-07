@@ -148,6 +148,10 @@ RSpec.describe Cart do
     amount = 2
     coupon_2 = create(:dollar_coupon, amount: amount)
     expect(cart.apply_coupon(item, coupon_2, subtotal)).to eq(item.price - amount)
+    
+    amount = 15
+    coupon_3 = create(:dollar_coupon, amount: amount)
+    expect(cart.apply_coupon(item, coupon_3, subtotal))
   end
   
   it 'merchant_pre_discount_total' do
