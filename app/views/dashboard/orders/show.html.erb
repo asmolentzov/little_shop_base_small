@@ -7,13 +7,13 @@
   <%= @order.user.city %>, <%= @order.user.state %> <%= @order.user.zip %>
 <% end %>
 
-<% if @order.coupon && @order.coupon.user == current_user %>
+<% if @coupon %>
   <div id="coupon">    
-    <p>Coupon applied: <%= @order.coupon.code %></p>
-    <% if @order.coupon.coupon_type == 'percentage' %>
-      <p>Discount: <%= @order.coupon.amount %>% on your items</p>
+    <p>Coupon applied: <%= @coupon.code %></p>
+    <% if @coupon.percentage? %>
+      <p>Discount: <%= @coupon.amount %>% on your items</p>
     <% else %>
-      <p>Discount: <%= number_to_currency(@order.coupon.amount) %>, cart minimum <%= number_to_currency(@order.coupon.cart_minimum) %></p>
+      <p>Discount: <%= number_to_currency(@coupon.amount) %>, cart minimum <%= number_to_currency(@coupon.cart_minimum) %></p>
     <% end %>
   </div>
 <% end %>
@@ -26,6 +26,9 @@
       <p><%= link_to item.name, item_path(item) %></p>
       <p><img id="item-<%= item.id %>-image" alt="image for <%= item.name %>" src="<%= item.image %>" width="150" /></p>
       <p>Price: <%= number_to_currency(@order.item_price(item.id)) %></p>
+      <% if @coupon %>
+        <p>Discounted Price per Coupon: <%= number_to_currency(@order.discounted_item_price(item.id, @coupon)) %></p>
+      <% end %>
       <p>Quantity: <%= @order.item_quantity(item.id) %></p>
       <p>
       <% if @order.item_fulfilled?(item.id) %>

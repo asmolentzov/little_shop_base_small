@@ -6,7 +6,7 @@
   <% @coupons.each do |coupon| %>
     <div id="coupon-<%= coupon.id %>">
       <h3><%= coupon.code %></h3>
-      <% if coupon.coupon_type == 'percentage' %>
+      <% if coupon.percentage? %>
         <p><%= coupon.amount %>% discount</p>
       <% else %>
         <p><%= number_to_currency(coupon.amount) %> discount</p>

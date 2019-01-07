@@ -15,6 +15,7 @@ RSpec.describe User, type: :model do
     it { should have_many :items }
     it { should have_many :orders }
     it { should have_many(:order_items).through(:orders) }
+    it { should have_many(:coupons) }
   end
 
   describe 'class methods' do

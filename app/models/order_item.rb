@@ -15,4 +15,8 @@ class OrderItem < ApplicationRecord
   def subtotal
     quantity * price
   end
+  
+  def discounted_subtotal(coupon)
+    subtotal - (subtotal * (coupon.amount / 100.0))
+  end
 end

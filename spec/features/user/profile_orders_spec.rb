@@ -269,6 +269,7 @@ RSpec.describe 'Profile Orders page', type: :feature do
 
       within "#oitem-#{@oi_3.id}" do
         expect(page).to have_content("Discount: #{@coupon.amount}%")
+        expect(page).to have_content("Discounted Subtotal: #{number_to_currency(@oi_3.discounted_subtotal(@coupon))}")
       end
       within "#oitem-#{@oi_1.id}" do
         expect(page).to_not have_content("Discount")

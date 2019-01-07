@@ -1,6 +1,8 @@
 class CouponsController < ApplicationController
+  before_action :restrict_access, except: [:apply, :remove]
+  
   def index
-    @coupons = Coupon.merchant_coupons(current_user)
+    @coupons = current_user.coupons
   end
   
   def new
@@ -9,8 +11,7 @@ class CouponsController < ApplicationController
   end
   
   def create
-    @coupon = Coupon.new(coupon_params)
-    @coupon.user = current_user
+    @coupon = current_user.coupons.new(coupon_params)
     if @coupon.save
       flash[:success] = "Coupon #{@coupon.code} was successfully created!"
       redirect_to coupons_path
@@ -41,12 +42,12 @@ class CouponsController < ApplicationController
   end
   
   def apply
-    coupon = Coupon.find_by(code: code_params[:code])
+    coupon = Coupon.find_by(code: coupon_params[:code])
     if coupon && !(coupon.used)
       session[:coupon] = coupon
       flash[:success] = "Coupon #{coupon.code} was successfully applied!"
     else
-      flash[:error] = "Coupon #{code_params[:code]} is not a valid coupon"
+      flash[:error] = "Coupon #{coupon_params[:code]} is not a valid coupon"
     end
     redirect_to cart_path
   end
@@ -64,7 +65,7 @@ class CouponsController < ApplicationController
     params.require(:coupon).permit(:coupon_type, :amount, :cart_minimum, :code)
   end
   
-  def code_params
-    params.require(:coupon).permit(:code)
+  def restrict_access
+    render file: 'errors/not_found', status: 404 unless current_user && (current_merchant? || current_admin?)
   end
 end
