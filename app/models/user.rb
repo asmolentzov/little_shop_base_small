@@ -132,4 +132,8 @@ class User < ApplicationRecord
   def unordered_items
     items.left_outer_joins(:order_items).where(order_items: { id: nil })
   end
+  
+  def my_low_inventory_items
+    items.where("items.inventory <= ?", 10)
+  end
 end

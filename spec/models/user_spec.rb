@@ -127,6 +127,16 @@ RSpec.describe User, type: :model do
       expect(merchant.unordered_items).to contain_exactly(item_1, item_3)
     end
     
+    it 'my_low_inventory_items' do
+      merchant = create(:merchant)
+      item_1 = create(:item, user: merchant, inventory: 20)
+      item_2 = create(:item, user: merchant, inventory: 5)
+      item_3 = create(:item, user: merchant, inventory: 12)
+      item_4 = create(:item, user: merchant, inventory: 2)
+      
+      expect(merchant.my_low_inventory_items).to eq([item_2, item_4])
+    end
+    
     describe 'unfulfilled orders details' do
       before(:each) do
         @merchant = create(:merchant)

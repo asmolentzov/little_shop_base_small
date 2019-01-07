@@ -118,5 +118,32 @@ describe 'As a merchant on the site' do
       
       expect(current_path).to eq(item_path(item_1))
     end
+    
+    it 'should show me items which have low inventory with links' do
+      item_1 = create(:item, user: @merchant, inventory: 100)
+      item_2 = create(:item, user: @merchant, inventory: 9)
+      item_3 = create(:item, user: @merchant, inventory: 12)
+      item_4 = create(:item, user: @merchant, inventory: 4)
+      
+      visit dashboard_path
+      
+      within "#to-do-low-inventory" do
+        expect(page).to have_link("#{item_2.name}: Restock")
+        expect(page).to have_link("#{item_4.name}: Restock")
+        expect(page).to_not have_content(item_1.name)
+        expect(page).to_not have_content(item_3.name)
+        click_link("#{item_2.name}: Restock")
+      end
+      
+      expect(current_path).to eq(edit_dashboard_item_path(item_2))
+      fill_in :item_inventory, with: 20
+      click_button 'Update Item'
+      
+      visit dashboard_path
+      
+      within "#to-do-low-inventory" do
+        expect(page).to_not have_content(item_2.name)
+      end
+    end
   end
 end
