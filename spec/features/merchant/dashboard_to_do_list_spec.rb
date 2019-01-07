@@ -116,7 +116,7 @@ describe 'As a merchant on the site' do
         click_link(item_1.name)
       end
       
-      expect(current_path).to eq(dashboard_items_path)
+      expect(current_path).to eq(item_path(item_1))
     end
   end
 end
