@@ -1,6 +1,7 @@
 class CouponsController < ApplicationController
   def index
-    @coupons = Coupon.merchant_coupons(current_user)
+    # @coupons = Coupon.merchant_coupons(current_user)
+    @coupons = current_user.coupons
   end
   
   def new
