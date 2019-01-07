@@ -1,4 +1,6 @@
 class CouponsController < ApplicationController
+  before_action :restrict_access, except: [:apply, :remove]
+  
   def index
     @coupons = current_user.coupons
   end
@@ -10,7 +12,6 @@ class CouponsController < ApplicationController
   
   def create
     @coupon = current_user.coupons.new(coupon_params)
-    # @coupon.user = current_user
     if @coupon.save
       flash[:success] = "Coupon #{@coupon.code} was successfully created!"
       redirect_to coupons_path
@@ -66,5 +67,9 @@ class CouponsController < ApplicationController
   
   def code_params
     params.require(:coupon).permit(:code)
+  end
+  
+  def restrict_access
+    render file: 'errors/not_found', status: 404 unless current_user && (current_merchant? || current_admin?)
   end
 end
