@@ -138,7 +138,9 @@ describe 'As a merchant on the site' do
       expect(current_path).to eq(edit_dashboard_item_path(item_2))
       fill_in :item_inventory, with: 20
       click_button 'Update Item'
-        
+      
+      visit dashboard_path
+      
       within "#to-do-low-inventory" do
         expect(page).to_not have_content(item_2.name)
       end
