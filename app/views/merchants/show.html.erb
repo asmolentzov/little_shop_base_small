@@ -29,7 +29,7 @@
       <h5>Items with Low Inventory (10 and Under)</h5>
       <ul>
         <% @low_inventory_items.each do |item| %>
-          <%= link_to "#{item.name}: Restock", edit_dashboard_item_path(item) %>
+          <li><%= link_to "#{item.name}: Restock", edit_dashboard_item_path(item) %></li>
         <% end %>
       </ul>
     </div>
