@@ -7,8 +7,4 @@ class Coupon < ApplicationRecord
   
   belongs_to :user
   
-  def self.merchant_coupons(merchant)
-    where(user: merchant)
-  end
-  
 end

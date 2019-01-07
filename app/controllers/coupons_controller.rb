@@ -1,6 +1,5 @@
 class CouponsController < ApplicationController
   def index
-    # @coupons = Coupon.merchant_coupons(current_user)
     @coupons = current_user.coupons
   end
   
@@ -10,8 +9,8 @@ class CouponsController < ApplicationController
   end
   
   def create
-    @coupon = Coupon.new(coupon_params)
-    @coupon.user = current_user
+    @coupon = current_user.coupons.new(coupon_params)
+    # @coupon.user = current_user
     if @coupon.save
       flash[:success] = "Coupon #{@coupon.code} was successfully created!"
       redirect_to coupons_path
