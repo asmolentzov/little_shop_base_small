@@ -2,10 +2,10 @@
 <p>Created: <%= order.created_at %></p>
 <p>Items in Order: <%= order.my_item_count(@merchant.id) %></p>
 <p>Value of Order: <%= number_to_currency(order.my_revenue_value(@merchant.id)) %></p>
-<% if order.coupon && order.coupon.user == @merchant %>
+<% if order.my_coupon(@merchant) %>
   <div id="coupon">    
     <p>Coupon applied: <%= order.coupon.code %></p>
-    <% if order.coupon.coupon_type == 'percentage' %>
+    <% if order.coupon.percentage? %>
       <p>Discount: <%= order.coupon.amount %>% on your items</p>
     <% else %>
       <p>Discount: <%= number_to_currency(order.coupon.amount) %>, cart minimum <%= number_to_currency(order.coupon.cart_minimum) %></p>

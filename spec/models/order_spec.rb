@@ -226,6 +226,7 @@ RSpec.describe Order, type: :model do
       order = create(:order)
       create(:fulfilled_order_item, order: order, coupon: coupon)
       expect(order.coupon).to eq(coupon)
+      
       order = create(:order)
       create(:order_item, order: order, coupon: coupon)
       expect(order.coupon).to eq(coupon)
@@ -233,6 +234,31 @@ RSpec.describe Order, type: :model do
       order = create(:order)
       create(:order_item, order: order)
       expect(order.coupon).to eq(nil)
+    end
+    
+    it '.my_coupon' do
+      merchant = create(:user)
+      expect(@order.my_coupon(merchant)).to eq(nil)
+      
+      item = create(:item, user: merchant)
+      coupon = create(:percent_coupon, user: merchant)
+      
+      order = create(:order)
+      create(:fulfilled_order_item, order: order, item: item, coupon: coupon)
+      expect(order.my_coupon(merchant)).to eq(coupon)
+      
+      order = create(:order)
+      create(:order_item, order: order, item: item, coupon: coupon)
+      expect(order.my_coupon(merchant)).to eq(coupon)
+      
+      order = create(:order)
+      create(:order_item, order: order)
+      expect(order.my_coupon(merchant)).to eq(nil)
+      
+      coupon_1 = create(:percent_coupon)
+      order = create(:order)
+      create(:order_item, coupon: coupon_1)
+      expect(order.my_coupon(merchant)).to eq(nil)
     end
     
     it '.discounted_item_price' do

@@ -2,6 +2,7 @@ class Dashboard::OrdersController < Dashboard::BaseController
   def show
     @order = Order.find(params[:id])
     @items = @order.my_items(current_user)
+    @coupon = @order.my_coupon(current_user)
   end
 
   def fulfill_item

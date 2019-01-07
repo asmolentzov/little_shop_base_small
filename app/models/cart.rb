@@ -68,7 +68,7 @@ class Cart
   end
   
   def apply_coupon(item, coupon, subtotal_amount)
-    if coupon.coupon_type == 'percentage'
+    if coupon.percentage?
       subtotal_amount -= ((coupon.amount / 100.0) * subtotal_amount)
     else
       difference = subtotal_amount - coupon.amount

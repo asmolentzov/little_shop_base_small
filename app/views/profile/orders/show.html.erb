@@ -6,7 +6,7 @@
   <% if @order.coupon %>
     <div id="coupon">    
       <p>Coupon applied: <%= @order.coupon.code %> for merchant: <%= @order.coupon.user.name %></p>
-      <% if @order.coupon.coupon_type == 'percentage' %>
+      <% if @order.coupon.percentage? %>
         <p>Discount: <%= @order.coupon.amount %>% for items from merchant <%= @order.coupon.user.name %></p>
       <% else %>
         <p>Discount: <%= number_to_currency(@order.coupon.amount) %> from merchant <%= @order.coupon.user.name %></p>

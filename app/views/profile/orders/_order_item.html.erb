@@ -8,7 +8,7 @@
     <p>Price: <%= number_to_currency(oitem.price) %></p>
     <p>Quantity: <%= oitem.quantity %></p>
     <p>Subtotal: <%= number_to_currency(oitem.subtotal) %></p>
-    <% if oitem.coupon && oitem.coupon.coupon_type == 'percentage' %>
+    <% if oitem.coupon && oitem.coupon.percentage? %>
       <p>Discount: <%= oitem.coupon.amount %>%</p>
       <p>Discounted Subtotal: <%= number_to_currency(oitem.discounted_subtotal(oitem.coupon)) %></p>
     <% end %>
