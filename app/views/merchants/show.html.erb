@@ -25,6 +25,14 @@
     <ul>
       <li>You have <%= pluralize(@num_unfulfilled_orders, 'unfulfilled order') %>, worth <%= number_to_currency(@revenue_unfulfilled_orders) %>.</li>
     </ul>
+    <div id="to-do-low-inventory">
+      <h5>Items with Low Inventory (10 and Under)</h5>
+      <ul>
+        <% @low_inventory_items.each do |item| %>
+          <%= link_to "#{item.name}: Restock", edit_dashboard_item_path %>
+        <% end %>
+      </ul>
+    </div>
     <div id="to-do-unordered-items">
       <h5>Unordered Items</h5>
       <p>The following items have never been ordered. Consider promoting them!</p>
