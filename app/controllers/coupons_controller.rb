@@ -42,12 +42,12 @@ class CouponsController < ApplicationController
   end
   
   def apply
-    coupon = Coupon.find_by(code: code_params[:code])
+    coupon = Coupon.find_by(code: coupon_params[:code])
     if coupon && !(coupon.used)
       session[:coupon] = coupon
       flash[:success] = "Coupon #{coupon.code} was successfully applied!"
     else
-      flash[:error] = "Coupon #{code_params[:code]} is not a valid coupon"
+      flash[:error] = "Coupon #{coupon_params[:code]} is not a valid coupon"
     end
     redirect_to cart_path
   end
@@ -63,10 +63,6 @@ class CouponsController < ApplicationController
   
   def coupon_params
     params.require(:coupon).permit(:coupon_type, :amount, :cart_minimum, :code)
-  end
-  
-  def code_params
-    params.require(:coupon).permit(:code)
   end
   
   def restrict_access
