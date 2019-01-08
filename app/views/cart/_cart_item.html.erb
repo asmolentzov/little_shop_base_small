@@ -6,6 +6,9 @@
     <p>Price: <%= number_to_currency(item.price) %></p>
     <p>Quantity: <%= @cart.count_of(item.id) %> of <%= item.inventory %> available</p>
     <p>Subtotal: <%= number_to_currency(@cart.subtotal(item.id)) %></p>
+    <% if applied_coupon && applied_coupon.user == item.user %>
+      <p>Discounted Subtotal: <%= number_to_currency(item.discounted_price(applied_coupon)) %></p>
+    <% end %>
     <p>
     <% if @cart.count_of(item.id) < item.inventory %>
     <%= button_to 'Add more to cart', cart_add_more_item_path(item) %>
