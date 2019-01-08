@@ -12,24 +12,35 @@ The coupons only apply to items in the cart and order that belong to the merchan
 
 ### Merchant To Do List
 This portion of the project implements a To Do list for merchants on their Dashboard. The list contains four items:
-  - Items Using Placeholder Images: this shows relevant items as links to their respective edit pages.
-  - Unfulfilled Orders: This gives a count of the unfulfilled orders and the revenue impact.
+  - Items Using Placeholder Images: this shows all the merchant's items that are still using placeholder images. The items are links to their respective edit pages.
+  - Unfulfilled Orders: This gives a count of the unfulfilled orders and their revenue impact.
   - Items with Low Inventory: This shows the merchant's items which have inventory of 10 or less. Each item is a link to that item's edit page so the merchant can restock the item.
   - Unordered Items: This gives a list of all the merchant's items that have never been ordered.
 
 ## Site Hosting
-The site is hosted on [Heroku](https://still-wave-97573.herokuapp.com/)
+The site is hosted on [Heroku](https://still-wave-97573.herokuapp.com/).
 
 ## The Database
-In order to implement coupons, a coupons table was added to the database. The coupons table has a foreign key to the users table so as to link it to the merchant who created it. Also, order_items has a foreign key for the coupons table, since an order_item may have a coupon applied. The schema here shows the coupons table and its related tables.
+In order to implement coupons, a coupons table was added to the database. The coupons table has a foreign key to the users table so as to link it to the merchant who created it. Also, order_items has a foreign key for the coupons table, since an order_item may have a coupon applied. In this project, coupons are one-time-use, and so can only be applied to one order. The schema here shows the coupons table and its related tables. 
 ![Coupon Schema](readme_schema.png)
 
 ## Installation
-The project can be forked and/or cloned from: https://github.com/asmolentzov/little_shop_base_small
-After cloning, run `bundle update` and then set up the database using `rake db:{drop,create,migrate,seed}`. 
+The project can be cloned from: https://github.com/asmolentzov/little_shop_base_small
+After cloning, run 
+```
+bundle update
+```
+and then set up the database using 
+```
+rake db:{drop,create,migrate,seed}
+```
 
 ### Testing
-Once installed on your local machine, tests can be run using `rspec`. Tests are implemented using RSpec and Capybara. 
+Once installed on your local machine, tests can be run by running 
+```
+rspec
+```
+Tests are implemented using RSpec and Capybara. 
 
 ## Built With
   - Ruby version 2.4
@@ -37,8 +48,10 @@ Once installed on your local machine, tests can be run using `rspec`. Tests are 
   - RSpec version 3.8
   - A variety of gems, notably: 
     - bcrypt for secure password handling
-    - FactoryBot for ease of creating test data
+    - FactoryBot for ease of creating test and seed data
 
-## Authors
-The extensions were completed by [Anna Smolentzov](https://github.com/asmolentzov), based on the code base by Turing School Instructor [Ian Douglas](https://github.com/iandouglas).
+## Authors & Acknowledgements
+The extensions were completed by [Anna Smolentzov](https://github.com/asmolentzov), based on the code base by Turing School Instructor [Ian Douglas](https://github.com/iandouglas). 
+
+Many thanks to instructors [Ian Douglas](https://github.com/iandouglas) and [Dione Wilson](https://github.com/dionew1)!
 
