@@ -90,7 +90,11 @@ RSpec.describe Order, type: :model do
     it '.total_item_count' do
       expect(@order.total_item_count).to eq(@oi_1.quantity + @oi_2.quantity)
     end
-
+    
+    it '.subtotal' do
+      expect(@order.subtotal).to eq((@oi_1.quantity*@oi_1.price) + (@oi_2.quantity*@oi_2.price))
+    end
+    
     it '.total_cost' do
       # No coupons
       expect(@order.total_cost).to eq((@oi_1.quantity*@oi_1.price) + (@oi_2.quantity*@oi_2.price))
