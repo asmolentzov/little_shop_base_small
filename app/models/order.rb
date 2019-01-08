@@ -41,6 +41,10 @@ class Order < ApplicationRecord
   def total_item_count
     order_items.sum(:quantity)
   end
+  
+  def subtotal
+    order_items.pluck("sum(quantity*price)").sum
+  end
 
   def total_cost
     if coupon
