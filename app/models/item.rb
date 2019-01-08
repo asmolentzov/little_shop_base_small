@@ -41,4 +41,8 @@ class Item < ApplicationRecord
   def ever_ordered?
     OrderItem.find_by_item_id(self.id) !=  nil
   end
+  
+  def discounted_price(coupon)
+    price - (price * (coupon.amount / 100.0))
+  end
 end
