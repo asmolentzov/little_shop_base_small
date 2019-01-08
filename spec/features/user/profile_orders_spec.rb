@@ -218,9 +218,7 @@ RSpec.describe 'Profile Orders page', type: :feature do
     end
     after :each do
       expect(page).to_not have_content('You have no orders yet')
-      
-      expect(page).to have_content("Pre-Coupon Subtotal: #{@order.subtotal}")
-      
+          
       within "#order-#{@order.id}" do
         expect(page).to_not have_content('Coupon')
         expect(page).to have_content("Item Count: #{@order.total_item_count}")
@@ -267,6 +265,7 @@ RSpec.describe 'Profile Orders page', type: :feature do
       expect(page).to have_content("Coupon applied: #{@coupon.code} for merchant: #{@coupon.user.name}")
       expect(page).to have_content("Discount: #{@coupon.amount}%")
       expect(page).to have_content("Item Count: #{@order.total_item_count}")
+      expect(page).to have_content("Pre-Coupon Subtotal: #{number_to_currency(@order.subtotal)}")
       expect(page).to have_content("Total Cost: #{number_to_currency(@order.total_cost)}")
 
       within "#oitem-#{@oi_3.id}" do
