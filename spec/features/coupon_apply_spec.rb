@@ -35,6 +35,10 @@ describe 'Coupon apply workflow' do
       expect(page).to have_content("Subtotal: #{number_to_currency(@item.price)}")
       expect(page).to have_content("Coupon #{@coupon.code} discount: #{@coupon.amount}% for items from merchant: #{@coupon.user.name}")
       expect(page).to have_content("Grand Total: #{number_to_currency(new_total)}")
+      
+      within("#item-#{@item.id}") do
+        expect(page).to have_content("Discounted Subtotal: #{number_to_currency(@item.discounted_price(@coupon))}")
+      end
     end
   end
   

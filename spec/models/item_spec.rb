@@ -66,5 +66,12 @@ RSpec.describe Item, type: :model do
       expect(item_1.ever_ordered?).to eq(true)
       expect(item_2.ever_ordered?).to eq(false)
     end
+    
+    it '.discounted_price' do
+      item = create(:item)
+      coupon = create(:percent_coupon)
+      
+      expect(item.discounted_price(coupon)).to eq(item.price - (item.price * (coupon.amount / 100.0)))
+    end
   end
 end

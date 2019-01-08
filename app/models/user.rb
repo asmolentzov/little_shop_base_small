@@ -136,4 +136,12 @@ class User < ApplicationRecord
   def my_low_inventory_items
     items.where("items.inventory <= ?", 10)
   end
+  
+  def available_coupons
+    coupons.where(used: false)
+  end
+  
+  def used_coupons
+    coupons.where(used: true)
+  end
 end

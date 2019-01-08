@@ -2,7 +2,8 @@ class CouponsController < ApplicationController
   before_action :restrict_access, except: [:apply, :remove]
   
   def index
-    @coupons = current_user.coupons
+    @available_coupons = current_user.available_coupons
+    @used_coupons = current_user.used_coupons
   end
   
   def new

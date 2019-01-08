@@ -106,24 +106,30 @@ describe 'As a merchant on the site' do
   end
   
   describe 'on my coupons index page' do
-    it 'shows me a list of my coupons' do
+    it 'shows me a list of my coupons, separated into available and used' do
       coupon_1 = create(:percent_coupon, user: @merchant)
       coupon_2 = create(:dollar_coupon, user: @merchant, used: true)
       coupon_3 = create(:percent_coupon)
       
       visit coupons_path
+      expect(page).to have_content("Available Coupons")
+      within ".available-coupons" do
+        within "#coupon-#{coupon_1.id}" do
+          expect(page).to have_content(coupon_1.code)
+          expect(page).to have_content("#{coupon_1.amount}% discount")
+          expect(page).to have_content("This coupon has not been used")
+        end  
+      end
       
-      within "#coupon-#{coupon_1.id}" do
-        expect(page).to have_content(coupon_1.code)
-        expect(page).to have_content("#{coupon_1.amount}% discount")
-        expect(page).to have_content("This coupon has not been used")
-      end  
+      expect(page).to have_content("Used Coupons")
+      within ".used-coupons" do
+        within "#coupon-#{coupon_2.id}" do
+          expect(page).to have_content(coupon_2.code)
+          expect(page).to have_content("#{number_to_currency(coupon_2.amount)} discount")
+          expect(page).to have_content("USED")
+        end  
+      end
       
-      within "#coupon-#{coupon_2.id}" do
-        expect(page).to have_content(coupon_2.code)
-        expect(page).to have_content("#{number_to_currency(coupon_2.amount)} discount")
-        expect(page).to have_content("USED")
-      end  
       expect(page).to_not have_content(coupon_3.code)
     end
     

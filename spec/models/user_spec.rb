@@ -81,6 +81,24 @@ RSpec.describe User, type: :model do
   end
 
   describe 'instance methods' do
+    it 'available_coupons' do
+      merchant = create(:merchant)
+      coupon_1 = create(:percent_coupon, user: merchant)
+      coupon_2 = create(:percent_coupon, used: true, user: merchant)
+      coupon_3 = create(:percent_coupon, user: merchant)
+      
+      expect(merchant.available_coupons).to eq([coupon_1,  coupon_3])
+    end
+    
+    it '.used_coupons' do
+      merchant = create(:merchant)
+      coupon_1 = create(:percent_coupon, user: merchant)
+      coupon_2 = create(:percent_coupon, used: true, user: merchant)
+      coupon_3 = create(:percent_coupon, user: merchant)
+      
+      expect(merchant.used_coupons).to eq([coupon_2])
+    end
+    
     it '.my_pending_orders' do
       merchants = create_list(:merchant, 2)
       item_1 = create(:item, user: merchants[0])
